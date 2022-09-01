@@ -60,7 +60,6 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 120px;
-  margin-top: 30px;
 `;
 const Categories = styled.span`
   font-size: 20px;
@@ -73,7 +72,7 @@ const Categories = styled.span`
 const MenuContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 20px;
   gap: 100px;
 `;
 const CategoryContainer = styled.div`
