@@ -33,7 +33,6 @@ const SaleBanner = () => {
     return () => clearInterval(timerId);
   }, [count]);
 
-  console.log(count);
   return (
     <Background>
       <Text>
