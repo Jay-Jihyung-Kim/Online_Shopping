@@ -10,8 +10,10 @@ import {
 } from "../data/hiddenMenuItems";
 
 const Container = styled.div`
-  max-width: 1500px;
-  margin: 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background-color: white;
 `;
 //Header
 const HeaderBackground = styled.div`
@@ -19,6 +21,8 @@ const HeaderBackground = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
+  max-width: 1500px;
+  margin: 0 auto;
 `;
 const Left = styled.div`
   display: flex;
@@ -29,7 +33,7 @@ const Left = styled.div`
 const Text = styled.span``;
 const BrandName = styled.span`
   font-family: "Qwitcher Grypen", cursive;
-  font-size: 70px;
+  font-size: 55px;
   font-weight: 500;
   flex: 50%;
   text-align: center;
@@ -60,6 +64,7 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 120px;
+  padding-bottom: 10px;
 `;
 const Categories = styled.span`
   font-size: 20px;
@@ -72,7 +77,7 @@ const Categories = styled.span`
 const MenuContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  padding-bottom: 20px;
   gap: 100px;
 `;
 const CategoryContainer = styled.div`

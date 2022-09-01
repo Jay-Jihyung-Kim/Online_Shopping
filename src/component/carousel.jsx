@@ -9,7 +9,7 @@ const Container = styled.div`
   display: flex;
   max-width: 1500px;
   max-height: 600px;
-  margin: 20px auto;
+  margin: 0px auto;
   background-color: #f7faf0;
   & > img {
     object-fit: cover;
