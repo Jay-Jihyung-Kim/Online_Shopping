@@ -23,6 +23,7 @@ const HeaderBackground = styled.div`
   margin-top: 10px;
   max-width: 1500px;
   margin: 0 auto;
+  padding: 0 100px;
 `;
 const Left = styled.div`
   display: flex;
@@ -33,9 +34,9 @@ const Left = styled.div`
 const Text = styled.span``;
 const BrandName = styled.span`
   font-family: "Qwitcher Grypen", cursive;
-  font-size: 55px;
+  font-size: 65px;
   font-weight: 500;
-  flex: 50%;
+  flex: 15%;
   text-align: center;
 `;
 const Right = styled.div`
@@ -64,7 +65,8 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 120px;
-  padding-bottom: 10px;
+  box-shadow: 0px 1px 1px lightgrey;
+  padding-bottom: 25px;
 `;
 const Categories = styled.span`
   font-size: 20px;
@@ -77,8 +79,10 @@ const Categories = styled.span`
 const MenuContainer = styled.div`
   display: flex;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-top: ${(props) => (props.status === null ? "0px" : "40px")};
+  padding-bottom: ${(props) => (props.status === null ? "0px" : "40px")};
   gap: 100px;
+  box-shadow: 0px 2px 2px lightgrey;
 `;
 const CategoryContainer = styled.div`
   display: flex;
@@ -102,6 +106,7 @@ const CategoryItem = styled.span`
 
 const Header = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
+  console.log(currentCategory);
 
   const handleCategory = (category) => {
     if (category === "Women") {
@@ -137,7 +142,7 @@ const Header = () => {
         </Right>
       </HeaderBackground>
       <Navbar onMouseLeave={handleMouseLeave}>
-        <NavbarContainer>
+        <NavbarContainer status={currentCategory}>
           {category.map((item) => {
             return (
               <Categories
@@ -149,7 +154,7 @@ const Header = () => {
             );
           })}
         </NavbarContainer>
-        <MenuContainer>
+        <MenuContainer status={currentCategory}>
           {currentCategory !== null
             ? currentCategory.map((item) => {
                 return (
