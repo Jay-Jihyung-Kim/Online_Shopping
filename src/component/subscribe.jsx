@@ -5,8 +5,7 @@ import { mobile } from "../util/responsive";
 const Container = styled.div`
   width: 100%;
   height: 100%;
-  max-width: 1500px;
-  margin: 4rem auto;
+  margin: 40px auto 0px;
   border-top: 1px solid #92b6b1;
   display: flex;
   flex-direction: column;
@@ -19,7 +18,7 @@ const SubscribeTitle = styled.h1`
   font-weight: 600;
   padding-top: 30px;
   margin: 0;
-  font-size: 25px;
+  font-size: 30px;
 `;
 const SubscribeText = styled.span`
   font-size: 15px;

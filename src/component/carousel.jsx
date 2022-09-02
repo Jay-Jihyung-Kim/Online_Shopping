@@ -7,8 +7,8 @@ const GridContainer = styled.div``;
 
 const Container = styled.div`
   display: flex;
-  max-width: 1500px;
-  max-height: 600px;
+  max-width: 2500px;
+  max-height: 700px;
   margin: 0px auto;
   background-color: #f7faf0;
   & > img {

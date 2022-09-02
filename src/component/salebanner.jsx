@@ -3,7 +3,7 @@ import TextTransition, { presets } from "react-text-transition";
 import styled from "styled-components";
 
 const Background = styled.div`
-  background-color: orange;
+  background-color: #cc641b;
   color: white;
   font-size: 18px;
   padding: 15px 0;

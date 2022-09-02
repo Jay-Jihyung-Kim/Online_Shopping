@@ -7,7 +7,6 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 import { mobile } from "../util/responsive";
 
 const FooterContainer = styled.div`
-  max-width: 1500px;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.05);
   padding: 1px 0;
