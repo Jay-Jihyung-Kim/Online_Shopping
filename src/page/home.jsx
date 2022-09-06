@@ -4,6 +4,7 @@ import Header from "../component/header";
 import CarouselSlide from "../component/carousel";
 import Subscribe from "../component/subscribe";
 import Footer from "../component/footer";
+import BestSeller from "../component/bestseller";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <SaleBanner />
       <Header />
       <CarouselSlide />
+      <BestSeller />
       <Subscribe />
       <Footer />
     </React.Fragment>

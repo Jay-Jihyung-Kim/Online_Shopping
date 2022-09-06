@@ -14,6 +14,7 @@ const Container = styled.div`
   top: 0;
   z-index: 9999;
   background-color: white;
+  font-family: "Libre Baskerville", serif;
 `;
 //Header
 const HeaderBackground = styled.div`
