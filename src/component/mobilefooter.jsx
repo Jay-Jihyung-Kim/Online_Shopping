@@ -7,11 +7,10 @@ import PinterestIcon from "@mui/icons-material/Pinterest";
 
 const Container = styled.div`
   width: 100%;
-  max-width: 1000px;
   display: flex;
   flex-direction: column;
   justify-items: center;
-  margin: 0 6rem;
+  padding: 0 20px;
 `;
 
 const GridContainer = styled.div`
@@ -24,6 +23,9 @@ const GridItem = styled.div`
     font-weight: 700;
     font-size: 15px;
     padding-bottom: 2px;
+  }
+  &:not(:first-child) {
+    padding-left: 10px;
   }
 `;
 const QuickLink = styled.div`
@@ -53,8 +55,7 @@ const FooterText = styled.span`
   font-size: 12px;
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
-  margin-top: 20px;
+  margin: 20px 0;
 `;
 
 const MobileFooter = () => {

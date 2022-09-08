@@ -123,6 +123,14 @@ const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  ${mobile({
+    gap: "12px",
+    fontWeight: "bold",
+    borderBottom: "1px solid gray",
+    paddingBottom: "12px",
+    marginLeft: "20px",
+    marginRight: "20px",
+  })}
 `;
 const CategoryType = styled.span`
   font-weight: bold;
@@ -131,13 +139,22 @@ const CategoryType = styled.span`
   &:hover {
     cursor: pointer;
   }
-  ${mobile({ textTransform: "uppercase", textDecoration: "none" })}
+  ${mobile({
+    textTransform: "uppercase",
+    textDecoration: "none",
+    fontSize: "15px",
+    marginTop: "12px",
+  })}
 `;
 const CategoryItem = styled.span`
   &:hover {
     cursor: pointer;
     text-decoration: underline;
   }
+  ${mobile({
+    fontSize: "13px",
+    paddingLeft: "10px",
+  })}
 `;
 
 //Mobile Menu
@@ -145,21 +162,27 @@ const MobileMenu = styled.div`
   position: absolute;
   top: 0;
   background-color: white;
-  width: 100%;
+  width: ${(props) => (props.status === "open" ? "100%" : "0%")};
+  overflow: hidden;
+  transition: width 0.3s;
 `;
 
 const MobileMenuTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 20px;
+  opacity: 80%;
 `;
 const MobileRegister = styled.span`
+  font-size: 12px;
   cursor: pointer;
 `;
 
 const Header = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
   const [mobileCategory, setMobileCategory] = useState(null);
+  const [openMobileMenu, setOpenMobileMenu] = useState("open");
 
   const handleCategory = (category) => {
     if (category === "Women") {
@@ -179,6 +202,12 @@ const Header = () => {
       : setMobileCategory(null);
   };
 
+  function handleMobileMenu() {
+    openMobileMenu === "open"
+      ? setOpenMobileMenu("closed")
+      : setOpenMobileMenu("open");
+  }
+
   function handleMouseLeave() {
     setCurrentCategory(null);
   }
@@ -191,7 +220,7 @@ const Header = () => {
           <Text>Stores</Text>
         </Left>
         <LeftMobile>
-          <BiMenu style={{ fontSize: "30px" }} />
+          <BiMenu style={{ fontSize: "30px" }} onClick={handleMobileMenu} />
           <BsPerson />
         </LeftMobile>
         <BrandName>LeveL</BrandName>
@@ -236,14 +265,14 @@ const Header = () => {
             : null}
         </MenuContainer>
       </Navbar>
-      <MobileMenu>
+      <MobileMenu status={openMobileMenu}>
         <MobileMenuTop>
           <MobileRegister>
             <u>Sign In</u> or <u>Register</u>
           </MobileRegister>
-          <BsXLg />
+          <BsXLg onClick={handleMobileMenu} />
         </MobileMenuTop>
-        <CategoryContainer>
+        <CategoryContainer style={{ borderTop: "1px solid gray" }}>
           <CategoryType>New</CategoryType>
         </CategoryContainer>
         <CategoryContainer>
