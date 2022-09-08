@@ -5,16 +5,18 @@ import CarouselSlide from "../component/carousel";
 import Subscribe from "../component/subscribe";
 import Footer from "../component/footer";
 import BestSeller from "../component/bestseller";
+import PromoItems from "../component/promoitems";
 
 const Home = () => {
   return (
     <React.Fragment>
       <SaleBanner />
       <Header />
-      <CarouselSlide />
+      {/* <CarouselSlide />
       <BestSeller />
+      <PromoItems />
       <Subscribe />
-      <Footer />
+      <Footer /> */}
     </React.Fragment>
   );
 };

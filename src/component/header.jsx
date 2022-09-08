@@ -22,9 +22,9 @@ const HeaderBackground = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-top: 10px;
-  max-width: 1500px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 100px;
+  padding: 0 25px;
 `;
 const Left = styled.div`
   display: flex;
@@ -32,7 +32,9 @@ const Left = styled.div`
   flex: 25%;
   gap: 5px;
 `;
-const Text = styled.span``;
+const Text = styled.span`
+  font-size: 12px;
+`;
 const BrandName = styled.span`
   font-family: "Qwitcher Grypen", cursive;
   font-size: 65px;
@@ -55,6 +57,9 @@ const SearchBar = styled.input`
   border: none;
   border-bottom: 1px solid black;
   width: 120px;
+  &::placeholder {
+    font-size: 12px;
+  }
   &:focus {
     outline: none;
     width: 180px;
@@ -70,7 +75,8 @@ const NavbarContainer = styled.div`
   padding-bottom: 25px;
 `;
 const Categories = styled.span`
-  font-size: 20px;
+  font-size: 14px;
+  text-transform: uppercase;
   &:hover {
     cursor: pointer;
     text-decoration: underline;
