@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { GrLocation } from "react-icons/gr";
-import { BsSearch, BsPerson, BsCart } from "react-icons/bs";
+import { BsSearch, BsPerson, BsCart, BsXLg } from "react-icons/bs";
+import { BiMenu } from "react-icons/bi";
 import { category } from "../data/category";
 import {
   hiddenMenuWomen,
   hiddenMenuMen,
   hiddenMenuKids,
 } from "../data/hiddenMenuItems";
+import { mobile } from "../util/responsive";
+import MobileFooter from "./mobilefooter";
 
 const Container = styled.div`
   position: sticky;
@@ -21,16 +24,17 @@ const HeaderBackground = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 25px;
+  ${mobile({ padding: "0 15px" })}
 `;
 const Left = styled.div`
   display: flex;
   align-items: center;
   flex: 25%;
   gap: 5px;
+  ${mobile({ display: "none" })}
 `;
 const Text = styled.span`
   font-size: 12px;
@@ -41,6 +45,7 @@ const BrandName = styled.span`
   font-weight: 500;
   flex: 15%;
   text-align: center;
+  ${mobile({ fontSize: "45px" })}
 `;
 const Right = styled.div`
   display: flex;
@@ -48,6 +53,7 @@ const Right = styled.div`
   align-items: center;
   gap: 15px;
   flex: 25%;
+  ${mobile({ display: "none" })}
 `;
 const SearchContainer = styled.div`
   display: flex;
@@ -65,13 +71,35 @@ const SearchBar = styled.input`
     width: 180px;
   }
 `;
+
+const LeftMobile = styled.div`
+  display: none;
+  font-size: 25px;
+  align-items: center;
+  gap: 12px;
+  flex: 25%;
+  ${mobile({ display: "flex" })}
+`;
+
+const RightMobile = styled.div`
+  display: none;
+  font-size: 25px;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 12px;
+  flex: 25%;
+  ${mobile({ display: "flex" })}
+`;
+
 //Navbar
-const Navbar = styled.div``;
+const Navbar = styled.div`
+  ${mobile({ display: "none" })}
+`;
 const NavbarContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 120px;
-  box-shadow: 0px 1px 1px lightgrey;
+  box-shadow: 0px 2px 2px lightgrey;
   padding-bottom: 25px;
 `;
 const Categories = styled.span`
@@ -103,6 +131,7 @@ const CategoryType = styled.span`
   &:hover {
     cursor: pointer;
   }
+  ${mobile({ textTransform: "uppercase", textDecoration: "none" })}
 `;
 const CategoryItem = styled.span`
   &:hover {
@@ -111,9 +140,26 @@ const CategoryItem = styled.span`
   }
 `;
 
+//Mobile Menu
+const MobileMenu = styled.div`
+  position: absolute;
+  top: 0;
+  background-color: white;
+  width: 100%;
+`;
+
+const MobileMenuTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+const MobileRegister = styled.span`
+  cursor: pointer;
+`;
+
 const Header = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
-  console.log(currentCategory);
+  const [mobileCategory, setMobileCategory] = useState(null);
 
   const handleCategory = (category) => {
     if (category === "Women") {
@@ -127,6 +173,12 @@ const Header = () => {
     }
   };
 
+  const handleMobileCategory = (category) => {
+    mobileCategory !== category
+      ? setMobileCategory(category)
+      : setMobileCategory(null);
+  };
+
   function handleMouseLeave() {
     setCurrentCategory(null);
   }
@@ -138,6 +190,10 @@ const Header = () => {
           <GrLocation />
           <Text>Stores</Text>
         </Left>
+        <LeftMobile>
+          <BiMenu style={{ fontSize: "30px" }} />
+          <BsPerson />
+        </LeftMobile>
         <BrandName>LeveL</BrandName>
         <Right>
           <SearchContainer>
@@ -147,6 +203,10 @@ const Header = () => {
           <BsPerson style={{ fontSize: "25px" }} />
           <BsCart style={{ fontSize: "20px" }} />
         </Right>
+        <RightMobile>
+          <BsCart />
+          <BsSearch style={{ fontSize: "23px" }} />
+        </RightMobile>
       </HeaderBackground>
       <Navbar onMouseLeave={handleMouseLeave}>
         <NavbarContainer status={currentCategory}>
@@ -176,6 +236,51 @@ const Header = () => {
             : null}
         </MenuContainer>
       </Navbar>
+      <MobileMenu>
+        <MobileMenuTop>
+          <MobileRegister>
+            <u>Sign In</u> or <u>Register</u>
+          </MobileRegister>
+          <BsXLg />
+        </MobileMenuTop>
+        <CategoryContainer>
+          <CategoryType>New</CategoryType>
+        </CategoryContainer>
+        <CategoryContainer>
+          <CategoryType onClick={() => handleMobileCategory("Women")}>
+            Women
+          </CategoryType>
+          {mobileCategory === "Women"
+            ? hiddenMenuWomen.map((item) => {
+                return <CategoryItem>{item.category}</CategoryItem>;
+              })
+            : null}
+        </CategoryContainer>
+        <CategoryContainer>
+          <CategoryType onClick={() => handleMobileCategory("Men")}>
+            Men
+          </CategoryType>
+          {mobileCategory === "Men"
+            ? hiddenMenuMen.map((item) => {
+                return <CategoryItem>{item.category}</CategoryItem>;
+              })
+            : null}
+        </CategoryContainer>
+        <CategoryContainer>
+          <CategoryType onClick={() => handleMobileCategory("Kids")}>
+            Kids
+          </CategoryType>
+          {mobileCategory === "Kids"
+            ? hiddenMenuKids.map((item) => {
+                return <CategoryItem>{item.category}</CategoryItem>;
+              })
+            : null}
+        </CategoryContainer>
+        <CategoryContainer>
+          <CategoryType>Sale</CategoryType>
+        </CategoryContainer>
+        <MobileFooter />
+      </MobileMenu>
     </Container>
   );
 };

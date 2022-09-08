@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import TextTransition, { presets } from "react-text-transition";
+import TextTransition from "react-text-transition";
 import styled from "styled-components";
+import { mobile } from "../util/responsive";
 
 const Background = styled.div`
   background-color: #cc641b;
@@ -10,6 +11,8 @@ const Background = styled.div`
   cursor: pointer;
   display: flex;
   justify-content: center;
+  align-items: center;
+  ${mobile({ fontSize: "15px", padding: "12px 0" })}
 `;
 
 const Text = styled.span`
