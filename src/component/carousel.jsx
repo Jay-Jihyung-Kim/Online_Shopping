@@ -2,7 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import Carousel from "react-bootstrap/Carousel";
 import styled from "styled-components";
-import { mobile } from "../util/responsive";
+import { small, mobile } from "../util/responsive";
 
 const Background = styled.div``;
 const CarouselPromo = styled.div`
@@ -28,6 +28,7 @@ const CarouselPromoText = styled.span`
   margin: 20px 0;
   padding: 0 10px;
   font-size: 16px;
+  text-align: center;
   ${mobile({ fontSize: "12px" })}
 `;
 const CarouselPromoButton = styled.button`
@@ -39,13 +40,15 @@ const CarouselPromoButton = styled.button`
 const GridContainer = styled.div``;
 const Container = styled.div`
   display: flex;
-  max-width: 2500px;
+  max-width: 2000px;
   max-height: 700px;
   margin: 0px auto;
   background-color: #f7faf0;
   & > img {
     object-fit: cover;
   }
+  ${mobile({ maxHeight: "400px" })}
+  ${small({ maxHeight: "250px" })}
 `;
 
 const CarouselSlide = () => {

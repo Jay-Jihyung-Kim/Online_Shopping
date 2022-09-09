@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { mobile } from "../util/responsive";
+import { small, mobile } from "../util/responsive";
 
 const Background = styled.div`
   display: grid;
@@ -8,7 +8,8 @@ const Background = styled.div`
   max-width: 1600px;
   margin: 100px auto;
   font-family: "Libre Baskerville", serif;
-  ${mobile({ margin: "30px auto" })}
+  ${mobile({ margin: "30px auto" })};
+  ${small({ display: "flex", flexDirection: "column-reverse" })}
 `;
 const Left = styled.div`
   display: flex;
@@ -17,6 +18,7 @@ const Left = styled.div`
   justify-content: center;
   padding: 0 20px;
   background-color: #fffff0;
+  ${small({ padding: "40px 20px" })}
 `;
 
 const PromoText = styled.span`
@@ -28,9 +30,6 @@ const PromoText = styled.span`
   @media (max-width: 800px) {
     font-size: 35px;
   }
-  @media (max-width: 500px) {
-    font-size: 20px;
-  }
 `;
 
 const PromoButton = styled.button`
@@ -41,8 +40,8 @@ const PromoButton = styled.button`
   color: white;
   background-color: #cc641b;
   @media (max-width: 500px) {
-    font-size: 10px;
-    width: 80px;
+    font-size: 12px;
+    width: 100px;
   }
 `;
 

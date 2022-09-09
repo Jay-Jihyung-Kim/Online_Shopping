@@ -14,7 +14,7 @@ const MidText = styled.span`
   max-width: 600px;
   font-weight: 700;
   line-height: 1.1;
-  ${mobile({ fontSize: "30px" })}
+  ${mobile({ fontSize: "30px", margin: "50px auto 25px" })}
 `;
 const BestCategoryContainer = styled.div`
   display: flex;

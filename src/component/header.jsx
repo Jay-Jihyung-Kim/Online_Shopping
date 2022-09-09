@@ -208,6 +208,7 @@ const Header = () => {
     openMobileMenu === "open"
       ? setOpenMobileMenu("closed")
       : setOpenMobileMenu("open");
+    setMobileCategory(null);
   }
 
   function handleMouseLeave() {
