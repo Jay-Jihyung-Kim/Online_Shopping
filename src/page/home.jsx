@@ -12,11 +12,11 @@ const Home = () => {
     <React.Fragment>
       <SaleBanner />
       <Header />
-      {/* <CarouselSlide />
+      <CarouselSlide />
       <BestSeller />
       <PromoItems />
       <Subscribe />
-      <Footer /> */}
+      <Footer />
     </React.Fragment>
   );
 };

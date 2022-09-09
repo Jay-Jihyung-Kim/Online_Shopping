@@ -27,7 +27,7 @@ const HeaderBackground = styled.div`
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 25px;
-  ${mobile({ padding: "0 15px" })}
+  ${mobile({ padding: "0 15px", boxShadow: "0px 2px 2px lightgrey" })}
 `;
 const Left = styled.div`
   display: flex;
@@ -163,8 +163,10 @@ const MobileMenu = styled.div`
   top: 0;
   background-color: white;
   width: ${(props) => (props.status === "open" ? "100%" : "0%")};
+  height: 100vh;
   overflow: hidden;
   transition: width 0.3s;
+  z-index: 999;
 `;
 
 const MobileMenuTop = styled.div`
@@ -182,7 +184,7 @@ const MobileRegister = styled.span`
 const Header = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
   const [mobileCategory, setMobileCategory] = useState(null);
-  const [openMobileMenu, setOpenMobileMenu] = useState("open");
+  const [openMobileMenu, setOpenMobileMenu] = useState("closed");
 
   const handleCategory = (category) => {
     if (category === "Women") {

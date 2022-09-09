@@ -19,6 +19,7 @@ const SubscribeTitle = styled.h1`
   padding-top: 30px;
   margin: 0;
   font-size: 30px;
+  ${mobile({ fontSize: "25px" })}
 `;
 const SubscribeText = styled.span`
   font-size: 15px;
@@ -35,7 +36,7 @@ const Input = styled.input`
   &:focus {
     outline: none;
   }
-  ${mobile({ maxWidth: "350px" })}
+  ${mobile({ maxWidth: "300px" })}
 `;
 const Button = styled.button`
   font-size: 18px;
@@ -46,7 +47,7 @@ const Button = styled.button`
   color: #fafafa;
   background: #202c39;
   padding: 7px 0;
-  ${mobile({ maxWidth: "350px" })}
+  ${mobile({ maxWidth: "300px" })}
 `;
 const SubscribeTerm = styled.span`
   font-size: 12px;
@@ -54,7 +55,7 @@ const SubscribeTerm = styled.span`
   max-width: 550px;
   margin-top: 10px;
   margin-bottom: 30px;
-  ${mobile({ fontSize: "10px", maxWidth: "90%" })}
+  ${mobile({ fontSize: "10px", maxWidth: "80%" })}
   & > a {
     font-size: 12px;
     color: rgba(0, 0, 0, 0.8);

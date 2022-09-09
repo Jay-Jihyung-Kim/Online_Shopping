@@ -1,36 +1,53 @@
 import React from "react";
 import styled from "styled-components";
+import { mobile } from "../util/responsive";
 
 const Background = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   max-width: 1600px;
   margin: 100px auto;
-  background-color: #fffff0;
   font-family: "Libre Baskerville", serif;
+  ${mobile({ margin: "30px auto" })}
 `;
 const Left = styled.div`
-  flex: 50%;
   display: flex;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  background-color: #fffff0;
 `;
+
 const PromoText = styled.span`
-  font-size: 80px;
+  font-size: 70px;
   font-weight: 700;
-  height: 100%;
+  @media (max-width: 1000px) {
+    font-size: 50px;
+  }
+  @media (max-width: 800px) {
+    font-size: 35px;
+  }
+  @media (max-width: 500px) {
+    font-size: 20px;
+  }
 `;
 
 const PromoButton = styled.button`
-  width: 100px;
+  width: 120px;
+  height: 100%:
   padding: 5px;
   border: none;
   color: white;
   background-color: #cc641b;
+  @media (max-width: 500px) {
+    font-size: 10px;
+    width: 80px;
+  }
 `;
 
 const PromoImage = styled.img`
+  width: 100%;
   flex: 50%;
 `;
 
