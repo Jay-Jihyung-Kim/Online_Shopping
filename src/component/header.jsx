@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GrLocation } from "react-icons/gr";
 import { BsSearch, BsPerson, BsCart, BsXLg } from "react-icons/bs";
@@ -226,13 +227,17 @@ const Header = () => {
           <BiMenu style={{ fontSize: "30px" }} onClick={handleMobileMenu} />
           <BsPerson />
         </LeftMobile>
-        <BrandName>LeveL</BrandName>
+        <Link to="/" style={{ textDecoration: "none", color: "black" }}>
+          <BrandName>LeveL</BrandName>
+        </Link>
         <Right>
           <SearchContainer>
             <SearchBar placeholder="Search" />
             <BsSearch style={{ fontSize: "20px" }} />
           </SearchContainer>
-          <BsPerson style={{ fontSize: "25px" }} />
+          <Link to="/account-login">
+            <BsPerson style={{ fontSize: "25px", color: "black" }} />
+          </Link>
           <BsCart style={{ fontSize: "20px" }} />
         </Right>
         <RightMobile>
@@ -270,9 +275,14 @@ const Header = () => {
       </Navbar>
       <MobileMenu status={openMobileMenu}>
         <MobileMenuTop>
-          <MobileRegister>
-            <u>Sign In</u> or <u>Register</u>
-          </MobileRegister>
+          <Link
+            to="/account-login"
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <MobileRegister>
+              <u>Sign In</u> or <u>Register</u>
+            </MobileRegister>
+          </Link>
           <BsXLg onClick={handleMobileMenu} />
         </MobileMenuTop>
         <CategoryContainer style={{ borderTop: "1px solid gray" }}>
