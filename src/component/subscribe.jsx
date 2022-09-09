@@ -13,17 +13,18 @@ const Container = styled.div`
   align-items: center;
   background-color: #92b6b1;
   color: white;
+  font-family: "Libre Baskerville", serif;
 `;
 const SubscribeTitle = styled.h1`
   font-weight: 600;
   padding-top: 30px;
   margin: 0;
   font-size: 30px;
-  ${mobile({ fontSize: "25px" })}
+  ${mobile({ fontSize: "23px" })}
 `;
 const SubscribeText = styled.span`
   font-size: 15px;
-  ${mobile({ fontSize: "12px" })}
+  ${mobile({ fontSize: "11px" })}
 `;
 const Input = styled.input`
   font-size: 15px;
@@ -36,10 +37,13 @@ const Input = styled.input`
   &:focus {
     outline: none;
   }
+  &::placeholder {
+    font-size: 12px;
+  }
   ${mobile({ maxWidth: "300px" })}
 `;
 const Button = styled.button`
-  font-size: 18px;
+  font-size: 15px;
   width: 100%;
   max-width: 450px;
   margin-top: 15px;
@@ -50,17 +54,17 @@ const Button = styled.button`
   ${mobile({ maxWidth: "300px" })}
 `;
 const SubscribeTerm = styled.span`
-  font-size: 12px;
+  font-size: 10px;
   width: 100%;
   max-width: 550px;
   margin-top: 10px;
   margin-bottom: 30px;
-  ${mobile({ fontSize: "10px", maxWidth: "80%" })}
+  ${mobile({ fontSize: "8px", maxWidth: "80%" })}
   & > a {
-    font-size: 12px;
+    font-size: 10px;
     color: rgba(0, 0, 0, 0.8);
     font-weight: 500;
-    ${mobile({ fontSize: "10px" })}
+    ${mobile({ fontSize: "8px" })}
     &:hover {
       color: #fafafa;
     }
