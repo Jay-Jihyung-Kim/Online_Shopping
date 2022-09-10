@@ -225,7 +225,17 @@ const Header = () => {
         </Left>
         <LeftMobile>
           <BiMenu style={{ fontSize: "30px" }} onClick={handleMobileMenu} />
-          <BsPerson />
+          <Link
+            to="/account-login"
+            style={{
+              textDecoration: "none",
+              color: "black",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <BsPerson />
+          </Link>
         </LeftMobile>
         <Link to="/" style={{ textDecoration: "none", color: "black" }}>
           <BrandName>LeveL</BrandName>
@@ -278,6 +288,7 @@ const Header = () => {
           <Link
             to="/account-login"
             style={{ textDecoration: "none", color: "black" }}
+            onClick={handleMobileMenu}
           >
             <MobileRegister>
               <u>Sign In</u> or <u>Register</u>
