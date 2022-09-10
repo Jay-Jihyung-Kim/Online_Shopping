@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -11,7 +11,8 @@ const Icon = styled.div`
   display: ${(props) => props.display};
 `;
 const Link = styled.span`
-  font-size: 2rem;
+  font-size: 15px;
+  line-height: 35px;
   text-decoration: none;
   color: black;
   opacity: 80%;
