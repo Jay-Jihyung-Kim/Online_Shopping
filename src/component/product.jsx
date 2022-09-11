@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { mobile } from "../util/responsive";
 import { productImage, Types } from "../data/productMenData";
@@ -81,7 +81,7 @@ const FilterItem = styled.span``;
 
 const FilterInput = styled.input`
   border: none;
-  width: 30px;
+  width: 40px;
   font-size: 14px;
   &:focus {
     outline: none;
@@ -150,13 +150,13 @@ const ProductText = styled.span`
 const PaginationContainer = styled.div``;
 
 const minDistance = 5;
+const pages = 8;
+const products = { productImage };
 
 const Product = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [priceValue, setPriceValue] = useState([10, 50]);
-  const [pages, setPages] = useState(8);
   const [filterstatus, setFilterstatus] = useState([]);
-  const [products, setProducts] = useState({ productImage });
   const [filtered, setFiltered] = useState([]);
 
   const handlePages = (page) => {
@@ -218,21 +218,30 @@ const Product = () => {
 
   const handleMax = (e) => {
     if (e.target.value > 50) {
-      setPriceValue([50, priceValue[1]]);
-    } else if (e.target.value < 0) {
-      setPriceValue([15, priceValue[1]]);
+      setPriceValue([priceValue[0], 50]);
+    } else if (e.target.value < 15) {
+      setPriceValue([priceValue[0], 15]);
     } else {
       setPriceValue([priceValue[0], parseInt(e.target.value)]);
     }
   };
 
-  console.log(priceValue);
+  const typeFilteredList =
+    filterstatus.length > 0 ? filtered : products.productImage;
 
-  const newList = filterstatus.length > 0 ? filtered : products.productImage;
+  const priceFilteredList = typeFilteredList.filter(
+    (item) => item.price > priceValue[0] && item.price < priceValue[1]
+  );
 
-  const sortList = _.orderBy(newList, [`price`], ["asc"]);
+  const sortList = _.orderBy(typeFilteredList, [`price`], ["asc"]);
 
-  const currentlist = paginate(newList, currentPage, pages);
+  const currentlist = paginate(priceFilteredList, currentPage, pages);
+
+  useEffect(() => {
+    if (priceFilteredList.length < pages + 1) setCurrentPage(1);
+  }, [priceFilteredList.length]);
+
+  console.log(priceFilteredList);
 
   return (
     <Container>
@@ -321,7 +330,7 @@ const Product = () => {
             <Pagination
               currentPage={currentPage}
               pages={pages}
-              products={newList}
+              products={priceFilteredList}
               onClick={handlePages}
             />
           </PaginationContainer>

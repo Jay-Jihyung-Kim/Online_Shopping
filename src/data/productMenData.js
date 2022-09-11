@@ -65,7 +65,7 @@ export const productImage = [
     id: 7,
     url: "https://images.unsplash.com/photo-1583744946564-b52ac1c389c8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
     name: "Short-Sleeve T-Shirt",
-    price: 15,
+    price: 20,
     type: "T-Shirt",
   },
   {
@@ -79,7 +79,7 @@ export const productImage = [
     id: 9,
     url: "https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80",
     name: "Collared Shirt",
-    price: 29,
+    price: 41,
     type: "Shirt",
   },
   {
@@ -93,14 +93,14 @@ export const productImage = [
     id: 11,
     url: "https://images.unsplash.com/photo-1492288991661-058aa541ff43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
     name: "Grey Hoodie",
-    price: 23,
+    price: 31,
     type: "Hoodies",
   },
   {
     id: 12,
     url: "https://images.unsplash.com/photo-1506634572416-48cdfe530110?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=685&q=80",
     name: "Red Knitted Sweaters",
-    price: 30,
+    price: 37,
     type: "Sweaters",
   },
   {
@@ -114,14 +114,14 @@ export const productImage = [
     id: 14,
     url: "https://images.unsplash.com/flagged/photo-1574874897534-036671407eda?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80",
     name: "Stripe Sweaters",
-    price: 21,
+    price: 48,
     type: "Sweaters",
   },
   {
     id: 15,
     url: "https://images.unsplash.com/photo-1619622376461-28732c2b88c8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=763&q=80",
     name: "Plain Sweaters",
-    price: 23,
+    price: 39,
     type: "Sweaters",
   },
 ];

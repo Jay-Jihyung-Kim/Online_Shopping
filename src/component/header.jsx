@@ -278,7 +278,7 @@ const Header = () => {
             ? currentCategory.map((item) => {
                 return (
                   <CategoryContainer>
-                    <CategoryType>{item.category}</CategoryType>
+                    <CategoryType key={item.id}>{item.category}</CategoryType>
                     {item.items.map((name) => {
                       return (
                         <Link
