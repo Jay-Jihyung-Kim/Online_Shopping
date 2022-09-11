@@ -1,5 +1,3 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
 export const slideImage = [
   {
     id: 1,
@@ -76,6 +74,55 @@ export const productImage = [
     name: "Design T-Shirt",
     price: 17,
     type: "T-Shirt",
+  },
+  {
+    id: 9,
+    url: "https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=765&q=80",
+    name: "Collared Shirt",
+    price: 29,
+    type: "Shirt",
+  },
+  {
+    id: 10,
+    url: "https://images.unsplash.com/photo-1582023617394-9f99138316af?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1965&q=80",
+    name: "Plaid Shirt",
+    price: 27,
+    type: "Shirt",
+  },
+  {
+    id: 11,
+    url: "https://images.unsplash.com/photo-1492288991661-058aa541ff43?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    name: "Grey Hoodie",
+    price: 23,
+    type: "Hoodies",
+  },
+  {
+    id: 12,
+    url: "https://images.unsplash.com/photo-1506634572416-48cdfe530110?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=685&q=80",
+    name: "Red Knitted Sweaters",
+    price: 30,
+    type: "Sweaters",
+  },
+  {
+    id: 13,
+    url: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+    name: "Graphic T-Shirt",
+    price: 19,
+    type: "T-Shirt",
+  },
+  {
+    id: 14,
+    url: "https://images.unsplash.com/flagged/photo-1574874897534-036671407eda?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80",
+    name: "Stripe Sweaters",
+    price: 21,
+    type: "Sweaters",
+  },
+  {
+    id: 15,
+    url: "https://images.unsplash.com/photo-1619622376461-28732c2b88c8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=763&q=80",
+    name: "Plain Sweaters",
+    price: 23,
+    type: "Sweaters",
   },
 ];
 

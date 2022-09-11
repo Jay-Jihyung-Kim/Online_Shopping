@@ -5,6 +5,8 @@ import { productImage, Types } from "../data/productMenData";
 import Pagination from "../util/Pagination";
 import { paginate } from "../util/paginate";
 import CheckBox from "../util/checkbox.jsx";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
 import CloseIcon from "@mui/icons-material/Close";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import _ from "lodash";
@@ -64,6 +66,12 @@ const FilterButton = styled.button`
   padding: 5px 13px;
 `;
 
+const FilterTypeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
 const FilterTitle = styled.span`
   font-weight: 700;
   text-decoration: underline;
@@ -71,11 +79,43 @@ const FilterTitle = styled.span`
 
 const FilterItem = styled.span``;
 
+const FilterInput = styled.input`
+  border: none;
+  width: 30px;
+  font-size: 14px;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const MinMaxPrice = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
+`;
+
+const FilterPriceContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 70px;
+  align-items: center;
+  border: 1px solid black;
+  padding: 4px;
+  opacity: 80%;
+`;
+
+const FilterPriceText = styled.span`
+  font-size: 11px;
+`;
+
 //Body Product
 const ProductContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 83.5px;
+  gap: 30px;
 `;
 const ProductItems = styled.div`
   display: grid;
@@ -109,9 +149,12 @@ const ProductText = styled.span`
 
 const PaginationContainer = styled.div``;
 
+const minDistance = 5;
+
 const Product = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [pages, setPages] = useState(6);
+  const [priceValue, setPriceValue] = useState([10, 50]);
+  const [pages, setPages] = useState(8);
   const [filterstatus, setFilterstatus] = useState([]);
   const [products, setProducts] = useState({ productImage });
   const [filtered, setFiltered] = useState([]);
@@ -128,7 +171,7 @@ const Product = () => {
 
     const filternumber = _.range(0, filterstatus.length);
     const filteredItem = filternumber.map((item) =>
-      products.productImage.filter((m) => m.type == filterstatus[item])
+      products.productImage.filter((m) => m.type === filterstatus[item])
     );
 
     const newfilterlist = filteredItem.flat();
@@ -140,9 +183,50 @@ const Product = () => {
   };
 
   function clearFilter() {
+    setPriceValue([10, 50]);
     setFilterstatus([]);
     setCurrentPage(1);
   }
+
+  const handleSlider = (event, newValue, activeThumb) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (activeThumb === 0) {
+      setPriceValue([
+        Math.min(newValue[0], priceValue[1] - minDistance),
+        priceValue[1],
+      ]);
+    } else {
+      setPriceValue([
+        priceValue[0],
+        Math.max(newValue[1], priceValue[0] + minDistance),
+      ]);
+    }
+  };
+
+  const handleMin = (e) => {
+    if (e.target.value > 45) {
+      setPriceValue([45, priceValue[1]]);
+    } else if (e.target.value < 0) {
+      setPriceValue([0, priceValue[1]]);
+    } else {
+      setPriceValue([parseInt(e.target.value), priceValue[1]]);
+    }
+  };
+
+  const handleMax = (e) => {
+    if (e.target.value > 50) {
+      setPriceValue([50, priceValue[1]]);
+    } else if (e.target.value < 0) {
+      setPriceValue([15, priceValue[1]]);
+    } else {
+      setPriceValue([priceValue[0], parseInt(e.target.value)]);
+    }
+  };
+
+  console.log(priceValue);
 
   const newList = filterstatus.length > 0 ? filtered : products.productImage;
 
@@ -162,18 +246,66 @@ const Product = () => {
             <FilterBy>Filter By</FilterBy>
             <FilterButton onClick={clearFilter}>Clear All</FilterButton>
           </FilterTop>
-          <FilterTitle>Item Type</FilterTitle>
-          <FilterItem>
-            {Types.map((item) => {
-              return (
-                <CheckBox
-                  item={item.type}
-                  onClick={handleFilter}
-                  filterStatus={filterstatus}
+          <FilterTypeContainer>
+            <FilterTitle>Item Type</FilterTitle>
+            <FilterItem>
+              {Types.map((item) => {
+                return (
+                  <CheckBox
+                    item={item.type}
+                    onClick={handleFilter}
+                    filterStatus={filterstatus}
+                    key={item.type}
+                  />
+                );
+              })}
+            </FilterItem>
+          </FilterTypeContainer>
+          <FilterTypeContainer>
+            <FilterTitle>Price</FilterTitle>
+            <MinMaxPrice>
+              <FilterPriceContainer>
+                <FilterPriceText>Min Price</FilterPriceText>
+                <FilterPriceText>$</FilterPriceText>
+                <FilterInput
+                  type="number"
+                  onChange={handleMin}
+                  value={priceValue[0]}
                 />
-              );
-            })}
-          </FilterItem>
+              </FilterPriceContainer>
+              <FilterPriceText>To</FilterPriceText>
+              <FilterPriceContainer>
+                <FilterPriceText>Max Price</FilterPriceText>
+                <FilterPriceText>$</FilterPriceText>
+                <FilterInput
+                  type="number"
+                  onChange={handleMax}
+                  value={priceValue[1]}
+                />
+              </FilterPriceContainer>
+            </MinMaxPrice>
+            <Box
+              sx={{
+                width: 150,
+                "& .MuiSlider-thumb": {
+                  color: "white",
+                  border: "2px solid black",
+                },
+                marginLeft: "10px",
+              }}
+            >
+              <Slider
+                getAriaLabel={() => "Minimum distance"}
+                value={priceValue}
+                min={10}
+                max={50}
+                onChange={handleSlider}
+                valueLabelDisplay="auto"
+                disableSwap
+                style={{ color: "grey" }}
+              />
+            </Box>
+          </FilterTypeContainer>
         </Filter>
         <ProductContainer>
           <ProductItems>
