@@ -286,7 +286,7 @@ const Product = () => {
             </MinMaxPrice>
             <Box
               sx={{
-                width: 150,
+                width: 175,
                 "& .MuiSlider-thumb": {
                   color: "white",
                   border: "2px solid black",

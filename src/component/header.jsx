@@ -259,12 +259,17 @@ const Header = () => {
         <NavbarContainer status={currentCategory}>
           {category.map((item) => {
             return (
-              <Categories
-                key={item.id}
-                onMouseOver={() => handleCategory(item.name)}
+              <Link
+                to="/products"
+                style={{ textDecoration: "none", color: "black" }}
               >
-                {item.name}
-              </Categories>
+                <Categories
+                  key={item.id}
+                  onMouseOver={() => handleCategory(item.name)}
+                >
+                  {item.name}
+                </Categories>
+              </Link>
             );
           })}
         </NavbarContainer>
@@ -275,7 +280,14 @@ const Header = () => {
                   <CategoryContainer>
                     <CategoryType>{item.category}</CategoryType>
                     {item.items.map((name) => {
-                      return <CategoryItem>{name}</CategoryItem>;
+                      return (
+                        <Link
+                          to="/products"
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
+                          <CategoryItem>{name}</CategoryItem>{" "}
+                        </Link>
+                      );
                     })}
                   </CategoryContainer>
                 );
