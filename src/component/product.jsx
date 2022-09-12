@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { mobile } from "../util/responsive";
+import { small, mobile } from "../util/responsive";
 import { productImage, Types } from "../data/productMenData";
 import Pagination from "../util/Pagination";
 import { paginate } from "../util/paginate";
@@ -54,11 +54,21 @@ const PageSortBy = styled.div`
   ${mobile({ display: "none" })}
 `;
 
-const PageRefine = styled.span`
+const PageRefine = styled.button`
   display: none;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
-  ${mobile({ display: "flex" })};
+  width: 150px;
+  padding: 10px 0;
+  background-color: #253746;
+  border: none;
+  color: white;
+  ${mobile({
+    display: "flex",
+    justifyContent: "center",
+    gap: "4px",
+    alignItems: "center",
+  })};
 `;
 
 const PageRefineMenu = styled.div`
@@ -181,7 +191,7 @@ const ProductContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 83.5px;
+  margin-bottom: 5px;
   gap: 30px;
 `;
 
@@ -190,7 +200,8 @@ const ProductItems = styled.div`
   grid-template-columns: repeat(4, 1fr);
   margin: 0 auto;
   grid-gap: 20px;
-  ${mobile({ gridTemplateColumns: "repeat(2,1fr)", gap: "7px" })}
+  ${mobile({ gridTemplateColumns: "repeat(4,1fr)", gap: "10px" })}
+  ${small({ gridTemplateColumns: "repeat(2,1fr)", gap: "7px" })}
 `;
 
 const ProductItem = styled.div`
