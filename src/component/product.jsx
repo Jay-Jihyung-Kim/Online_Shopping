@@ -72,7 +72,8 @@ const PageRefineMenu = styled.div`
   transition: width 0.3s;
   z-index: 9999;
   padding: ${(props) => (props.status === true ? "12px" : "0px")};
-  margin-top: -9px;
+  margin-top: -78px;
+  touch-action: none;
 `;
 
 const PageRefineTop = styled.div`
@@ -232,6 +233,7 @@ const Product = () => {
 
   const handlePages = (page) => {
     setCurrentPage(page);
+    window.scrollTo(0, 0);
   };
 
   const handleFilter = (status) => {
