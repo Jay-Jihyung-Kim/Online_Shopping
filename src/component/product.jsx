@@ -55,7 +55,7 @@ const PageSortBy = styled.div`
 `;
 
 const PageRefine = styled.span`
-  display: "none";
+  display: none;
   font-size: 18px;
   font-weight: 700;
   ${mobile({ display: "flex" })};
