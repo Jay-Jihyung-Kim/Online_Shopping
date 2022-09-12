@@ -389,7 +389,7 @@ const Product = () => {
                   fontFamily: "Libre Baskerville, serif",
                 }}
               >
-                Gender
+                Sort By
               </FormLabel>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
