@@ -72,7 +72,7 @@ const PageRefineMenu = styled.div`
   transition: width 0.3s;
   z-index: 9999;
   padding: ${(props) => (props.status === true ? "12px" : "0px")};
-  margin-top: -78px;
+  margin-top: -77px;
   touch-action: none;
 `;
 
