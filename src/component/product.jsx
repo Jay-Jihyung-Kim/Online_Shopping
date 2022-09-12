@@ -80,7 +80,7 @@ const PageRefineTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   border-bottom: 2px solid gray;
   padding-bottom: 10px;
 `;
@@ -364,7 +364,7 @@ const Product = () => {
               style={{
                 borderBottom: "2px solid gray",
                 marginBottom: "20px",
-                paddingBottom: "10px",
+                paddingBottom: "20px",
                 width: "100%",
               }}
             >
