@@ -15,7 +15,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import { BsXLg } from "react-icons/bs";
 import _ from "lodash";
 
@@ -344,7 +344,7 @@ const Product = () => {
       <Container>
         <PageLocation>/ Clothing / Men</PageLocation>
         <PageInfo>
-          <PageName>Men's Top</PageName>
+          <PageName>Men's Tops</PageName>
           <PageSortBy>
             <Box sx={{ width: 160 }}>
               <FormControl fullWidth>

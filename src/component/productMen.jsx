@@ -1,286 +1,255 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { mobile } from "../util/responsive";
+import { small, mobile } from "../util/responsive";
 import { productImage, Types } from "../data/productMenData";
 import Pagination from "../util/Pagination";
 import { paginate } from "../util/paginate";
 import CheckBox from "../util/checkbox.jsx";
-import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
+import Select from "@mui/material/Select";
+import { BsXLg } from "react-icons/bs";
 import _ from "lodash";
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   max-width: 1450px;
-  margin: 0 auto;
-  padding: 10px 10px;
-  ${mobile({ padding: "0 10px" })}
+  margin: 10px auto;
+  padding: 0 20px;
+  font-family: "Libre Baskerville", serif;
+  position: relative;
+  ${mobile({ padding: "0 7px" })}
 `;
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 20% 80%;
-  ${mobile({ display: "flex", flexDirection: "column" })}
-`;
-
-const LocationContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: #f1f5f8;
-  padding: 10px 0;
+//Page Info (Top)
+const PageInfo = styled.div`
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 60px;
-`;
-
-const Location = styled.span`
-  font-size: 18px;
-  color: black;
-  opacity: 80%;
-`;
-
-const FilterContainer = styled.div`
-  @media screen and (max-width: 720px) {
-    height: 100%;
-    width: ${(props) => props.width};
-    position: fixed;
-    right: 0;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    z-index: 999;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    transition: width 0.3s;
-  }
-`;
-
-const Xmark = styled.div`
-  display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
-  & > h1 {
-    margin: 0;
-  }
-  @media screen and (min-width: 720px) {
-    display: none;
-  }
+  max-width: 1280px;
+  margin: 20px 0;
+  gap: 18px;
+  ${mobile({ margin: "10px 0" })}
 `;
 
-const Filter = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-left: 20px;
-  padding-top: 30px;
-  & > p {
-    font-size: 20px;
-    text-decoration: none;
-    color: black;
-    opacity: 80%;
-    line-height: 20px;
-  }
-  & > a:first-child {
-    font-weight: 700;
-    padding-bottom: 5px;
-    text-decoration: underline;
-  }
-  & > a:hover {
-    text-decoration: underline;
-  }
-  ${mobile({ padding: "10px 20px" })}
+const PageLocation = styled.span`
+  font-size: 12px;
 `;
 
-const FilterTitle = styled.span`
-  font-size: 20px;
+const PageName = styled.span`
+  font-size: 25px;
   font-weight: 700;
-  text-decoration: underline;
-  color: black;
-  opacity: 80%;
-  margin-bottom: 10px;
 `;
 
-const FilterList = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-left: 20px;
-  padding-top: 30px;
-  & > a {
-    font-size: 20px;
-    text-decoration: none;
-    color: black;
-    opacity: 80%;
-    line-height: 20px;
-    font-weight: 700;
-    padding-bottom: 5px;
-    text-decoration: underline;
-  }
-  ${mobile({ padding: "10px 20px" })}
-`;
-
-const Filtertype = styled.div`
-  display: flex;
-  flex-direction: column;
-  & > p {
-    font-size: 20px;
-    text-decoration: none;
-    color: black;
-    opacity: 80%;
-    line-height: 20px;
-  }
-  & > span {
-    font-size: 12px;
-    padding-top: 10px;
-    cursor: pointer;
-  }
-`;
-
-const ListContainer = styled.div``;
-
-const Toptag = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+const PageSortBy = styled.div`
   ${mobile({ display: "none" })}
 `;
 
-const ToptagHidden = styled.div`
+const PageRefine = styled.button`
+  display: none;
+  font-size: 15px;
+  font-weight: 700;
+  width: 150px;
+  padding: 10px 0;
+  background-color: #253746;
+  border: none;
+  color: white;
+  ${mobile({
+    display: "flex",
+    justifyContent: "center",
+    gap: "4px",
+    alignItems: "center",
+  })};
+`;
+
+const PageRefineMenu = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: white;
+  width: ${(props) => (props.status === true ? "60%" : "0%")};
+  height: 100vh;
+  overflow: hidden;
+  transition: width 0.3s;
+  z-index: 9999;
+  padding: ${(props) => (props.status === true ? "12px" : "0px")};
+  margin-top: -77px;
+  touch-action: none;
+`;
+
+const PageRefineTop = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  @media only screen and (min-width: 720px) {
-    display: none;
-  }
-`;
-
-const Refine = styled.div`
-  display: flex;
   align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 2px solid gray;
+  padding-bottom: 10px;
 `;
 
-const Button = styled.button`
-  font-size: 25px;
-  border: none;
-  background-color: white;
-  color: rgba(0, 0, 0, 0.9);
+const PageBlackBackground = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: black;
+  opacity: 0.5;
+  top: 0;
+  z-index: 1001;
+  touch-action: none;
+  display: ${(props) => (props.status === true ? "block" : "none")};
 `;
 
-const ProductCategory = styled.div`
+//Body
+const BodyContainer = styled.div`
   display: flex;
-  align-items: baseline;
+  ${mobile({ justifyContent: "center" })}
 `;
 
-const CategoryName = styled.div`
-  font-size: 30px;
-  ${mobile({ fontSize: "25px" })}
+//Body Filter
+const Filter = styled.div`
+  min-width: 240px;
+  margin-right: 20px;
+  ${mobile({ display: "none" })}
 `;
 
-const NumberofProduct = styled.div`
-  font-size: 20px;
-  opacity: 80%;
-  margin-left: 20px;
-  ${mobile({ fontSize: "12px", marginLeft: "10px" })}
+const FilterRefine = styled.div`
+  display: "none";
+  ${mobile({ display: "block" })}
 `;
 
-const SortCategory = styled.div`
+const FilterTop = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 `;
 
-const Sortby = styled.div`
-  font-size: 15px;
+const FilterBy = styled.span`
+  font-size: 12px;
 `;
 
-const SortList = styled.select`
-  font-size: 15px;
-  border: none;
+const FilterButton = styled.button`
+  font-size: 12px;
+  border: 1px solid black;
   background-color: white;
-  appearance: none;
-  margin-left: 10px;
-  opacity: 80%;
+  padding: 5px 13px;
+`;
+
+const FilterTypeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+`;
+
+const FilterTitle = styled.span`
+  font-weight: 700;
+  text-decoration: underline;
+`;
+
+const FilterItem = styled.span``;
+
+const FilterInput = styled.input`
+  border: none;
+  width: 40px;
+  font-size: 14px;
   &:focus {
-    border: none;
     outline: none;
   }
 `;
 
-const Option = styled.option`
-  font-size: 15px;
-  &:after {
-    border: none;
-    opacity: 80%;
-  }
+const MinMaxPrice = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 10px;
 `;
 
-const Product = styled.div`
-  display: grid;
-  width: 100%;
-  height: 100%;
-  grid-template-columns: repeat(3, 1fr);
-  @media screen and (max-width: 700px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  grid-gap: 10px;
-  justify-items: center;
-  @media screen and (max-width: 380px) {
-    grid-gap: 0px;
-  }
+const FilterPriceContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 70px;
+  align-items: center;
+  border: 1px solid black;
+  padding: 4px;
+  opacity: 80%;
 `;
 
+const FilterPriceText = styled.span`
+  font-size: 11px;
+`;
+
+//Body Product
 const ProductContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+  gap: 30px;
+`;
+
+const ProductItems = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0 auto;
+  grid-gap: 20px;
+  ${mobile({ gridTemplateColumns: "repeat(4,1fr)", gap: "10px" })}
+  ${small({ gridTemplateColumns: "repeat(2,1fr)", gap: "7px" })}
+& > a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+`;
+
+const ProductItem = styled.div`
+display: flex;
+flex-direction: column;
+width: 100%:
+height: 100%;
+flex: 1;
+`;
+
+const ProductImg = styled.img`
   width: 100%;
   height: 100%;
-`;
-const Img = styled.img`
-  width: 100%;
-  height: 80%;
+  max-height: 300px;
+  max-width: 240px;
   object-fit: cover;
-  @media screen and (max-width: 380px) {
-    width: 154px;
-    height: 181px;
-  }
-  ${mobile({ alignSelf: "center" })}
+  margin-bottom: 10px;
+  ${mobile({ maxHeight: "250px", marginBottom: "5px" })}
 `;
 
-const Name = styled.span`
-  font-size: 20px;
-  color: rgba(0, 0, 0, 0.7);
-  @media screen and (max-width: 380px) {
-    font-size: 15px;
-    padding-left: 10px;
-    margin-bottom: -6px;
-  }
+const ProductText = styled.span`
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
 `;
-const Price = styled.span`
-  font-size: 20px;
-  color: rgba(0, 0, 0, 0.7);
-  @media screen and (max-width: 380px) {
-    font-size: 15px;
-    padding-left: 10px;
-    margin-bottom: 10px;
-  }
-`;
-const PaginationContainer = styled.div`
-  grid-column: 2;
-  display: flex;
-  justify-content: center;
-`;
-// const Container = styled.div``
+
+const PaginationContainer = styled.div``;
+
+const minDistance = 10;
+const pages = 8;
+const products = { productImage };
 
 const ProductMen = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pages, setPages] = useState(6);
-  const [products, setProducts] = useState({ productImage });
+  const [priceValue, setPriceValue] = useState([10, 50]);
+  const [sortBy, setSortBy] = useState("");
   const [filterstatus, setFilterstatus] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [RefineWidth, setRefineWidth] = useState("0%");
 
-  let handlePages = (page) => {
+  const handlePages = (page) => {
     setCurrentPage(page);
+    window.scrollTo(0, 0);
   };
 
   const handleFilter = (status) => {
@@ -291,7 +260,7 @@ const ProductMen = () => {
 
     const filternumber = _.range(0, filterstatus.length);
     const filteredItem = filternumber.map((item) =>
-      products.productImage.filter((m) => m.type == filterstatus[item])
+      products.productImage.filter((m) => m.type === filterstatus[item])
     );
 
     const newfilterlist = filteredItem.flat();
@@ -302,108 +271,320 @@ const ProductMen = () => {
     }
   };
 
-  let handleRefineWidth = (status) => {
-    status === "open" ? setRefineWidth("60%") : setRefineWidth("0%");
-    status === "close" ? setRefineWidth("0%") : setRefineWidth("60%");
-  };
-
   function clearFilter() {
+    setPriceValue([10, 50]);
+    setSortBy("");
     setFilterstatus([]);
     setCurrentPage(1);
   }
 
-  const newList = filterstatus.length > 0 ? filtered : products.productImage;
+  const handleSlider = (event, newValue, activeThumb) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
 
-  const sortList = _.orderBy(newList, [`price`], ["asc"]);
+    if (activeThumb === 0) {
+      setPriceValue([
+        Math.min(newValue[0], priceValue[1] - minDistance),
+        priceValue[1],
+      ]);
+    } else {
+      setPriceValue([
+        priceValue[0],
+        Math.max(newValue[1], priceValue[0] + minDistance),
+      ]);
+    }
+  };
 
-  const currentlist = paginate(newList, currentPage, pages);
+  const handleMin = (e) => {
+    if (e.target.value > 45) {
+      setPriceValue([45, priceValue[1]]);
+    } else if (e.target.value < 0) {
+      setPriceValue([0, priceValue[1]]);
+    } else {
+      setPriceValue([parseInt(e.target.value), priceValue[1]]);
+    }
+  };
+
+  const handleMax = (e) => {
+    if (e.target.value > 50) {
+      setPriceValue([priceValue[0], 50]);
+    } else if (e.target.value < 20) {
+      setPriceValue([priceValue[0], 20]);
+    } else {
+      setPriceValue([priceValue[0], parseInt(e.target.value)]);
+    }
+  };
+
+  const handleSortBy = (e) => {
+    setSortBy(e.target.value);
+  };
+
+  const handleMenuOpen = () => {
+    menuOpen === false ? setMenuOpen(true) : setMenuOpen(false);
+    window.scrollTo(0, 0);
+  };
+
+  const typeFilteredList =
+    filterstatus.length > 0 ? filtered : products.productImage;
+
+  const priceFilteredList = typeFilteredList.filter(
+    (item) => item.price > priceValue[0] && item.price < priceValue[1]
+  );
+
+  let sortedList =
+    sortBy === "" || sortBy === "featured"
+      ? priceFilteredList
+      : _.orderBy(priceFilteredList, ["price"], [sortBy]);
+
+  const currentlist = paginate(sortedList, currentPage, pages);
+
+  useEffect(() => {
+    if (priceFilteredList.length < pages + 1) setCurrentPage(1);
+  }, [priceFilteredList.length]);
 
   return (
-    <Container>
-      <GridContainer>
-        <FilterContainer width={RefineWidth}>
-          <Xmark>
-            <h1>Refine</h1>
-            <CloseIcon
-              style={{ fontSize: "20px" }}
-              onClick={() => handleRefineWidth("close")}
-            />
-          </Xmark>
-          <Filter>
-            <FilterTitle>Shop by Category</FilterTitle>
-            <p>New Arrivals</p>
-            <p>Tops</p>
-            <p>Bottoms</p>
-            <p>Underwear</p>
-            <p>Accessories</p>
-            <p>Shoes</p>
-          </Filter>
-          <FilterList>
-            <FilterTitle>Filter by Type</FilterTitle>
-            <Filtertype>
-              {Types.map((item) => {
-                return (
-                  <CheckBox
-                    item={item.type}
-                    onClick={handleFilter}
-                    filterStatus={filterstatus}
-                  />
-                );
-              })}
-              <span onClick={clearFilter}>Clear All</span>
-            </Filtertype>
-          </FilterList>
-        </FilterContainer>
-        <ListContainer>
-          <Toptag>
-            <ProductCategory>
-              <CategoryName>Men's Top</CategoryName>
-              <NumberofProduct>({newList.length} styles)</NumberofProduct>
-            </ProductCategory>
-            <SortCategory>
-              <Sortby>Sort by:</Sortby>
-              <SortList>
-                <Option>New arrivals</Option>
-                <Option>Best seller</Option>
-                <Option>Price from low to high</Option>
-                <Option>Price from high to low</Option>
-              </SortList>
-            </SortCategory>
-          </Toptag>
-          <ToptagHidden>
-            <ProductCategory>
-              <CategoryName>Men's Top</CategoryName>
-              <NumberofProduct>({newList.length} styles)</NumberofProduct>
-            </ProductCategory>
-            <Refine>
-              <Button onClick={() => handleRefineWidth("open")}>
-                <DisplaySettingsIcon
-                  style={{ fontSize: "20px", marginRight: "5px" }}
+    <React.Fragment>
+      <PageBlackBackground status={menuOpen}></PageBlackBackground>
+      <Container>
+        <PageLocation>/ Clothing / Men</PageLocation>
+        <PageInfo>
+          <PageName>Men's Tops</PageName>
+          <PageSortBy>
+            <Box sx={{ width: 160 }}>
+              <FormControl fullWidth>
+                <InputLabel>Sort By</InputLabel>
+                <Select
+                  variant="standard"
+                  label="Age"
+                  value={sortBy}
+                  onChange={handleSortBy}
+                  style={{ fontSize: "14px" }}
+                >
+                  <MenuItem value={"featured"}>Featured</MenuItem>
+                  <MenuItem value={"desc"}>Price High to Low</MenuItem>
+                  <MenuItem value={"asc"}>Price Low to High</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+          </PageSortBy>
+          <PageRefine onClick={handleMenuOpen}>
+            <DisplaySettingsIcon />
+            Refine
+          </PageRefine>
+          <PageRefineMenu status={menuOpen}>
+            <PageRefineTop>
+              <PageName>Refine</PageName>
+              <BsXLg onClick={handleMenuOpen} />
+            </PageRefineTop>
+            <FormControl
+              style={{
+                borderBottom: "2px solid gray",
+                marginBottom: "20px",
+                paddingBottom: "20px",
+                width: "100%",
+              }}
+            >
+              <FormLabel
+                id="demo-radio-buttons-group-label"
+                style={{
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  color: "black",
+                  fontFamily: "Libre Baskerville, serif",
+                }}
+              >
+                Sort By
+              </FormLabel>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                value={sortBy}
+                onChange={handleSortBy}
+              >
+                <FormControlLabel
+                  value="featured"
+                  control={<Radio />}
+                  label="Featured"
                 />
-                Refine
-              </Button>
-            </Refine>
-          </ToptagHidden>
-          <Product>
-            {currentlist.map((item) => (
-              <ProductContainer key={item.id}>
-                <Img src={item.url} />
-                <Name>{item.name}</Name>
-                <Price>${item.price}</Price>
-              </ProductContainer>
-            ))}
-          </Product>
-        </ListContainer>
-        <PaginationContainer>
-          <Pagination
-            currentPage={currentPage}
-            pages={pages}
-            products={newList}
-            onClick={handlePages}
-          />
-        </PaginationContainer>
-      </GridContainer>
-    </Container>
+                <FormControlLabel
+                  value="desc"
+                  control={<Radio />}
+                  label="Price High to Low"
+                />
+                <FormControlLabel
+                  value="asc"
+                  control={<Radio />}
+                  label="Price Low to High"
+                />
+              </RadioGroup>
+            </FormControl>
+            <FilterRefine>
+              <FilterTop>
+                <FilterBy
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    color: "black",
+                  }}
+                >
+                  Filter By
+                </FilterBy>
+                <FilterButton onClick={clearFilter}>Clear All</FilterButton>
+              </FilterTop>
+              <FilterTypeContainer>
+                <FilterTitle>Item Type</FilterTitle>
+                <FilterItem>
+                  {Types.map((item) => {
+                    return (
+                      <CheckBox
+                        item={item.type}
+                        onClick={handleFilter}
+                        filterStatus={filterstatus}
+                        key={item.type}
+                      />
+                    );
+                  })}
+                </FilterItem>
+              </FilterTypeContainer>
+              <FilterTypeContainer>
+                <FilterTitle>Price</FilterTitle>
+                <MinMaxPrice>
+                  <FilterPriceContainer>
+                    <FilterPriceText>Min Price</FilterPriceText>
+                    <FilterPriceText>$</FilterPriceText>
+                    <FilterInput
+                      type="number"
+                      onChange={handleMin}
+                      value={priceValue[0]}
+                    />
+                  </FilterPriceContainer>
+                  <FilterPriceText>To</FilterPriceText>
+                  <FilterPriceContainer>
+                    <FilterPriceText>Max Price</FilterPriceText>
+                    <FilterPriceText>$</FilterPriceText>
+                    <FilterInput
+                      type="number"
+                      onChange={handleMax}
+                      value={priceValue[1]}
+                    />
+                  </FilterPriceContainer>
+                </MinMaxPrice>
+                <Box
+                  sx={{
+                    width: 175,
+                    "& .MuiSlider-thumb": {
+                      color: "white",
+                      border: "2px solid black",
+                    },
+                    marginLeft: "10px",
+                  }}
+                >
+                  <Slider
+                    getAriaLabel={() => "Minimum distance"}
+                    value={priceValue}
+                    min={10}
+                    max={50}
+                    onChange={handleSlider}
+                    valueLabelDisplay="auto"
+                    disableSwap
+                    style={{ color: "grey" }}
+                  />
+                </Box>
+              </FilterTypeContainer>
+            </FilterRefine>
+          </PageRefineMenu>
+        </PageInfo>
+        <BodyContainer>
+          <Filter>
+            <FilterTop>
+              <FilterBy>Filter By</FilterBy>
+              <FilterButton onClick={clearFilter}>Clear All</FilterButton>
+            </FilterTop>
+            <FilterTypeContainer>
+              <FilterTitle>Item Type</FilterTitle>
+              <FilterItem>
+                {Types.map((item) => {
+                  return (
+                    <CheckBox
+                      item={item.type}
+                      onClick={handleFilter}
+                      filterStatus={filterstatus}
+                      key={item.type}
+                    />
+                  );
+                })}
+              </FilterItem>
+            </FilterTypeContainer>
+            <FilterTypeContainer>
+              <FilterTitle>Price</FilterTitle>
+              <MinMaxPrice>
+                <FilterPriceContainer>
+                  <FilterPriceText>Min Price</FilterPriceText>
+                  <FilterPriceText>$</FilterPriceText>
+                  <FilterInput
+                    type="number"
+                    onChange={handleMin}
+                    value={priceValue[0]}
+                  />
+                </FilterPriceContainer>
+                <FilterPriceText>To</FilterPriceText>
+                <FilterPriceContainer>
+                  <FilterPriceText>Max Price</FilterPriceText>
+                  <FilterPriceText>$</FilterPriceText>
+                  <FilterInput
+                    type="number"
+                    onChange={handleMax}
+                    value={priceValue[1]}
+                  />
+                </FilterPriceContainer>
+              </MinMaxPrice>
+              <Box
+                sx={{
+                  width: 175,
+                  "& .MuiSlider-thumb": {
+                    color: "white",
+                    border: "2px solid black",
+                  },
+                  marginLeft: "10px",
+                }}
+              >
+                <Slider
+                  getAriaLabel={() => "Minimum distance"}
+                  value={priceValue}
+                  min={10}
+                  max={50}
+                  onChange={handleSlider}
+                  valueLabelDisplay="auto"
+                  disableSwap
+                  style={{ color: "grey" }}
+                />
+              </Box>
+            </FilterTypeContainer>
+          </Filter>
+          <ProductContainer>
+            <ProductItems>
+              {currentlist.map((item) => (
+                <a href={`/products/${item.id}`}>
+                  <ProductItem key={item.id}>
+                    <ProductImg src={item.url} />
+                    <ProductText>{item.name}</ProductText>
+                    <ProductText>${item.price}</ProductText>
+                  </ProductItem>
+                </a>
+              ))}
+            </ProductItems>
+            <PaginationContainer>
+              <Pagination
+                currentPage={currentPage}
+                pages={pages}
+                products={priceFilteredList}
+                onClick={handlePages}
+              />
+            </PaginationContainer>
+          </ProductContainer>
+        </BodyContainer>
+      </Container>
+    </React.Fragment>
   );
 };
 

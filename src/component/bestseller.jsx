@@ -5,6 +5,7 @@ import { mobile } from "../util/responsive";
 
 const Background = styled.div`
   font-family: "Libre Baskerville", serif;
+  margin-bottom: 100px;
 `;
 const MidText = styled.span`
   font-size: 50px;

@@ -6,10 +6,17 @@ const Background = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   max-width: 1600px;
-  margin: 100px auto;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  margin: 50px auto;
   font-family: "Libre Baskerville", serif;
-  ${mobile({ margin: "30px auto" })};
-  ${small({ display: "flex", flexDirection: "column-reverse" })}
+  ${mobile({
+    margin: "30px auto",
+    display: "flex",
+    flexDirection: "column-reverse",
+    padding: "0 20px;",
+  })};
 `;
 const Left = styled.div`
   display: flex;
@@ -18,7 +25,9 @@ const Left = styled.div`
   justify-content: center;
   padding: 0 20px;
   background-color: #fffff0;
-  ${small({ padding: "40px 20px" })}
+  width: auto;
+  height: auto;
+  ${mobile({ padding: "40px 20px" })}
 `;
 
 const PromoText = styled.span`
@@ -34,7 +43,6 @@ const PromoText = styled.span`
 
 const PromoButton = styled.button`
   width: 120px;
-  height: 100%:
   padding: 5px;
   border: none;
   color: white;
@@ -47,17 +55,19 @@ const PromoButton = styled.button`
 
 const PromoImage = styled.img`
   width: 100%;
-  flex: 50%;
+  height: 100%;
+  object-fit: cover;
 `;
 
-const PromoItems = () => {
+const PromoItems = (props) => {
+  const { text, img } = props;
   return (
     <Background>
       <Left>
-        <PromoText>Must-Haves</PromoText>
+        <PromoText>{text}</PromoText>
         <PromoButton>Shop Now</PromoButton>
       </Left>
-      <PromoImage src="https://images.unsplash.com/photo-1597633244018-0201d0158aab?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80" />
+      <PromoImage src={img} />
     </Background>
   );
 };

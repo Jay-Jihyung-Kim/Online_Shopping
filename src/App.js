@@ -3,11 +3,13 @@ import Home from "./page/home";
 import Login from "./page/login";
 import Products from "./page/products";
 import NotFound from "./page/404";
+import ProductDetail from "./page/productDetail";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/products/:id" element={<ProductDetail />} />
         <Route path="/products" element={<Products />} />
         <Route path="/account-login" element={<Login />} />
         <Route path="/not-found" element={<NotFound />} />
