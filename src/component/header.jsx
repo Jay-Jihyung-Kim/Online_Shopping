@@ -316,7 +316,14 @@ const Header = () => {
           <BsXLg onClick={handleMobileMenu} />
         </MobileMenuTop>
         <CategoryContainer style={{ borderTop: "1px solid gray" }}>
-          <CategoryType>New</CategoryType>
+          <CategoryType>
+            <Link
+              to="/products"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              New
+            </Link>
+          </CategoryType>
         </CategoryContainer>
         <CategoryContainer>
           <CategoryType onClick={() => handleMobileCategory("Women")}>
@@ -324,7 +331,14 @@ const Header = () => {
           </CategoryType>
           {mobileCategory === "Women"
             ? hiddenMenuWomen.map((item) => {
-                return <CategoryItem>{item.category}</CategoryItem>;
+                return (
+                  <Link
+                    to="/products"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <CategoryItem>{item.category}</CategoryItem>
+                  </Link>
+                );
               })
             : null}
         </CategoryContainer>
@@ -334,7 +348,14 @@ const Header = () => {
           </CategoryType>
           {mobileCategory === "Men"
             ? hiddenMenuMen.map((item) => {
-                return <CategoryItem>{item.category}</CategoryItem>;
+                return (
+                  <Link
+                    to="/products"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <CategoryItem>{item.category}</CategoryItem>
+                  </Link>
+                );
               })
             : null}
         </CategoryContainer>
@@ -344,12 +365,26 @@ const Header = () => {
           </CategoryType>
           {mobileCategory === "Kids"
             ? hiddenMenuKids.map((item) => {
-                return <CategoryItem>{item.category}</CategoryItem>;
+                return (
+                  <Link
+                    to="/products"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <CategoryItem>{item.category}</CategoryItem>
+                  </Link>
+                );
               })
             : null}
         </CategoryContainer>
         <CategoryContainer>
-          <CategoryType>Sale</CategoryType>
+          <CategoryType>
+            <Link
+              to="/products"
+              style={{ textDecoration: "none", color: "black" }}
+            >
+              Sale
+            </Link>
+          </CategoryType>
         </CategoryContainer>
         <MobileFooter />
       </MobileMenu>
