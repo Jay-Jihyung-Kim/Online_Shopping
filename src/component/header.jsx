@@ -16,7 +16,7 @@ import MobileFooter from "./mobilefooter";
 const Container = styled.div`
   position: sticky;
   top: 0;
-  z-index: 9999;
+  z-index: 1000;
   background-color: white;
   font-family: "Libre Baskerville", serif;
 `;
@@ -216,6 +216,10 @@ const Header = () => {
     setCurrentCategory(null);
   }
 
+  function toTop() {
+    window.scrollTo(0, 0);
+  }
+
   return (
     <Container>
       <HeaderBackground>
@@ -234,7 +238,7 @@ const Header = () => {
               alignItems: "center",
             }}
           >
-            <BsPerson />
+            <BsPerson onClick={toTop} />
           </Link>
         </LeftMobile>
         <Link to="/" style={{ textDecoration: "none", color: "black" }}>
@@ -246,7 +250,10 @@ const Header = () => {
             <BsSearch style={{ fontSize: "20px" }} />
           </SearchContainer>
           <Link to="/account-login">
-            <BsPerson style={{ fontSize: "25px", color: "black" }} />
+            <BsPerson
+              style={{ fontSize: "25px", color: "black" }}
+              onClick={toTop}
+            />
           </Link>
           <BsCart style={{ fontSize: "20px" }} />
         </Right>
@@ -302,7 +309,7 @@ const Header = () => {
             style={{ textDecoration: "none", color: "black" }}
             onClick={handleMobileMenu}
           >
-            <MobileRegister>
+            <MobileRegister onClick={toTop}>
               <u>Sign In</u> or <u>Register</u>
             </MobileRegister>
           </Link>

@@ -12,6 +12,7 @@ const Background = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
   ${mobile({ fontSize: "15px", padding: "12px 0" })}
 `;
 
