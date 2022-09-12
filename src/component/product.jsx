@@ -306,6 +306,7 @@ const Product = () => {
 
   const handleMenuOpen = () => {
     menuOpen === false ? setMenuOpen(true) : setMenuOpen(false);
+    window.scrollTo(0, 0);
   };
 
   const typeFilteredList =
