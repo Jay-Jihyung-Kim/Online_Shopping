@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { small, mobile } from "../util/responsive";
 import { productImage } from "../data/productMenData";
 import Box from "@mui/material/Box";
 import styled from "styled-components";
@@ -23,21 +24,31 @@ const PageBody = styled.div`
   justify-content: center;
   margin: 30px 0;
   gap: 100px;
-  width: 100%;
-  max-height: 600px;
+  ${mobile({
+    flexDirection: "column",
+    margin: "15px auto",
+    gap: "30px",
+    alignItems: "center",
+  })}
 `;
 const ProductImage = styled.img`
   width: 500px;
   height: 600px;
   object-fit: cover;
+  ${mobile({ maxWidth: "500px" })}
+  ${small({ maxWidth: "350px", maxHeight: "450px" })}
 `;
-const ProductDetail = styled.div``;
+const ProductDetail = styled.div`
+  ${small({ paddingLeft: "30px" })}
+`;
 const ProductName = styled.h1`
   font-size: 32px;
+  ${small({ fontSize: "25px" })}
 `;
 const ProductPrice = styled.h3`
   font-size: 18px;
   display: flex;
+  ${small({ fontSize: "15px" })}
 `;
 const ProductDetailCategory = styled.div`
   margin: 50px 0;
@@ -46,10 +57,6 @@ const FlexContainer = styled.div`
   display: flex;
   gap: 5px;
   align-items: center;
-  & > a {
-    color: inherit;
-    text-decoration: inherit;
-  }
 `;
 const ProductColor = styled.div`
   width: 40px;
@@ -67,6 +74,7 @@ const ProductSize = styled.button`
 `;
 const ProductCategory = styled.h2`
   font-size: 22px;
+  ${small({ fontSize: "17px" })}
 `;
 const ProductAddtoCart = styled.button`
   background-color: #141414;
@@ -74,6 +82,7 @@ const ProductAddtoCart = styled.button`
   border: none;
   width: 200px;
   padding: 7px 0;
+  ${small({ width: "150px" })}
 `;
 const RecommendationContainer = styled.div`
   display: flex;
@@ -82,6 +91,15 @@ const RecommendationContainer = styled.div`
   justify-content: center;
   margin-top: 50px;
   gap: 20px;
+`;
+const RecommendationFlexContainer = styled.div`
+  display: flex;
+  gap: 15px;
+  & > a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  ${mobile({ display: "grid", gridTemplateColumns: "repeat(2,1fr)" })}
 `;
 const RecommendationTitle = styled.span`
   font-size: 36px;
@@ -95,6 +113,7 @@ const RecommendationImageContainer = styled.div`
 const RecommendationImage = styled.img`
   height: 270px;
   width: 216px;
+  ${small({ maxWidth: "160px", maxHeight: "200px" })}
 `;
 const RecommendationText = styled.span``;
 
@@ -237,9 +256,10 @@ const ProductDetailPage = (props) => {
           </ProductDetailCategory>
         </ProductDetail>
       </PageBody>
+
       <RecommendationContainer>
         <RecommendationTitle>You May Also Like</RecommendationTitle>
-        <FlexContainer style={{ gap: "15px" }}>
+        <RecommendationFlexContainer>
           {filteredItem.length > 4
             ? filteredItem.slice(0, 4).map((item) => {
                 return (
@@ -263,7 +283,7 @@ const ProductDetailPage = (props) => {
                   </a>
                 );
               })}
-        </FlexContainer>
+        </RecommendationFlexContainer>
       </RecommendationContainer>
 
       <PromoItems

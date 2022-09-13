@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { small, mobile } from "../util/responsive";
+import { mobile } from "../util/responsive";
 
 const Background = styled.div`
   display: grid;
