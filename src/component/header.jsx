@@ -182,6 +182,13 @@ const MobileRegister = styled.span`
   cursor: pointer;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: black;
+  display: flex;
+  alignitems: center;
+`;
+
 const Header = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
   const [mobileCategory, setMobileCategory] = useState(null);
@@ -268,7 +275,9 @@ const Header = () => {
           </Link>
         </Right>
         <RightMobile>
-          <BsCart />
+          <StyledLink to="/cart">
+            <BsCart />
+          </StyledLink>
           <BsSearch style={{ fontSize: "23px" }} />
         </RightMobile>
       </HeaderBackground>

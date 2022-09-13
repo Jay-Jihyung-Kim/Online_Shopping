@@ -154,7 +154,6 @@ const ProductDetailPage = (props) => {
   const salePrice = Math.round(currentItem.price * 0.8 * 100) / 100;
   const salePriceDecimal =
     salePrice.toString().length > 3 ? salePrice + "0" : salePrice;
-  console.log(salePrice.toString().length);
 
   const handleColorChange = (color) => {
     setCurrentColor(color);
