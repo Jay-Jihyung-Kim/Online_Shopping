@@ -223,7 +223,7 @@ const ProductImg = styled.img`
   max-width: 240px;
   object-fit: cover;
   margin-bottom: 10px;
-  ${mobile({ maxHeight: "250px", marginBottom: "5px" })}
+  ${mobile({ height: "250px", marginBottom: "5px" })}
 `;
 
 const ProductText = styled.span`
