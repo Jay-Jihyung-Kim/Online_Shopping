@@ -36,7 +36,7 @@ const ProductImage = styled.img`
   height: 600px;
   object-fit: cover;
   ${mobile({ maxWidth: "500px" })}
-  ${small({ maxWidth: "400px", maxHeight: "450px" })}
+  ${small({ maxWidth: "100%", maxHeight: "450px" })}
 `;
 const ProductDetail = styled.div`
   ${small({ padding: "0 15px" })}
