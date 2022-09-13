@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { small, mobile } from "../util/responsive";
 import { productImage, Types } from "../data/productMenData";

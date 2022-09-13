@@ -15,7 +15,6 @@ const Background = styled.div`
     margin: "30px auto",
     display: "flex",
     flexDirection: "column-reverse",
-    padding: "0 20px;",
   })};
 `;
 const Left = styled.div`
