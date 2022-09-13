@@ -48,7 +48,10 @@ const ProductName = styled.h1`
 const ProductPrice = styled.h3`
   font-size: 18px;
   display: flex;
-  ${small({ fontSize: "15px" })}
+  margin-top: 4px;
+  font-weight: 200;
+  color: #5c5c5c;
+  ${small({ fontSize: "15px", marginTop: "0" })};
 `;
 const ProductDetailCategory = styled.div`
   margin: 50px 0;
@@ -179,15 +182,7 @@ const ProductDetailPage = (props) => {
           <ProductDetailCategory>
             <FlexContainer>
               <ProductCategory>Color: </ProductCategory>
-              <ProductPrice
-                style={{
-                  fontWeight: "200",
-                  color: "#5c5c5c",
-                  marginTop: "4px",
-                }}
-              >
-                {currentColor}
-              </ProductPrice>
+              <ProductPrice>{currentColor}</ProductPrice>
             </FlexContainer>
             <FlexContainer>
               {colors.map((item) => {
@@ -204,15 +199,7 @@ const ProductDetailPage = (props) => {
           <ProductDetailCategory>
             <FlexContainer>
               <ProductCategory>Size:</ProductCategory>
-              <ProductPrice
-                style={{
-                  fontWeight: "200",
-                  color: "#5c5c5c",
-                  marginTop: "4px",
-                }}
-              >
-                {currentSize}
-              </ProductPrice>
+              <ProductPrice>{currentSize}</ProductPrice>
             </FlexContainer>
             <FlexContainer>
               {sizes.map((item) => {
