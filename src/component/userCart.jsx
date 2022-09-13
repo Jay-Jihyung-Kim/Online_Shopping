@@ -140,6 +140,7 @@ const ItemContainerRight = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  ${mobile({ marginTop: "20px" })}
 `;
 
 const SignInContainer = styled.div`
