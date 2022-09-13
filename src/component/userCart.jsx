@@ -177,6 +177,10 @@ const UserCart = () => {
     setCurrentQuantity(e.target.value);
   };
 
+  function toTop() {
+    window.scrollTo(0, 0);
+  }
+
   return (
     <React.Fragment>
       <EmptyContainer>
@@ -247,7 +251,7 @@ const UserCart = () => {
         <ItemContainerRight>
           <SignInContainer>
             <StyledLink to="/account-login">
-              <FlexColumn>
+              <FlexColumn onClick={toTop}>
                 <MediumText>Earn Points with this order!</MediumText>
                 <SmallText>
                   <u style={{ marginRight: "5px" }}>

@@ -271,12 +271,12 @@ const Header = () => {
               alignItems: "center",
             }}
           >
-            <BsCart style={{ fontSize: "20px" }} />
+            <BsCart style={{ fontSize: "20px" }} onClick={toTop} />
           </Link>
         </Right>
         <RightMobile>
           <StyledLink to="/cart">
-            <BsCart />
+            <BsCart onClick={toTop} />
           </StyledLink>
           <BsSearch style={{ fontSize: "23px" }} />
         </RightMobile>
