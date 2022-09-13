@@ -36,10 +36,10 @@ const ProductImage = styled.img`
   height: 600px;
   object-fit: cover;
   ${mobile({ maxWidth: "500px" })}
-  ${small({ maxWidth: "350px", maxHeight: "450px" })}
+  ${small({ maxWidth: "400px", maxHeight: "450px" })}
 `;
 const ProductDetail = styled.div`
-  ${small({ paddingLeft: "30px" })}
+  ${small({ padding: "0 15px" })}
 `;
 const ProductName = styled.h1`
   font-size: 32px;
