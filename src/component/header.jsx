@@ -255,7 +255,17 @@ const Header = () => {
               onClick={toTop}
             />
           </Link>
-          <BsCart style={{ fontSize: "20px" }} />
+          <Link
+            to="/cart"
+            style={{
+              textDecoration: "none",
+              color: "black",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <BsCart style={{ fontSize: "20px" }} />
+          </Link>
         </Right>
         <RightMobile>
           <BsCart />
