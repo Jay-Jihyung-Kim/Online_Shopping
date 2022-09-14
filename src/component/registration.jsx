@@ -64,13 +64,6 @@ const Register = styled.span`
   color: ${(props) =>
     props.status === "register" ? "white" : "rgba(0, 0, 0, 0.5)"};
 `;
-const Status = styled.span`
-  ${listbasestyle}
-  background-color: ${(props) =>
-    props.status === "status" ? "rgba(0, 0, 0, 0.7)" : "none"};
-  color: ${(props) =>
-    props.status === "status" ? "white" : "rgba(0, 0, 0, 0.5)"};
-`;
 
 const formBasicStyle = css`
   display: flex;
@@ -250,10 +243,6 @@ const Registration = () => {
     setPasswordGuide("none");
   }
 
-  function handleSave() {}
-
-  console.log(formik.values);
-
   return (
     <Container>
       <ListContainer>
@@ -263,9 +252,6 @@ const Registration = () => {
         <Register onClick={() => handleClick("register")} status={status}>
           Register
         </Register>
-        {/* <Status onClick={() => handleClick("status")} status={status}>
-          Order Status
-        </Status> */}
       </ListContainer>
       <SigninForm onSubmit={formik.handleSubmit} display={status}>
         <Title>Sign In To Your Account</Title>

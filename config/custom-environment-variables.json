@@ -1,0 +1,4 @@
+{
+  "jwtPrivateKey": "shopping_jwtPrivateKey",
+  "db": "shopping_db"
+}
