@@ -41,12 +41,20 @@ router.put("/", async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) return;
 
-  if (!user.owned.includes(req.body.owned)) {
-    user.owned.push(req.body.owned);
+  if (req.body.cart) {
+    user.cart = [...user.cart, req.body.cart];
   }
 
-  if (req.body.pokemon) {
-    user.pokemon = req.body.pokemon;
+  const result = await user.save();
+  res.send(result);
+});
+
+router.put("/:id", async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) return res.status(404).send("The user does not exist");
+
+  if (req.body.cart) {
+    user.cart = req.body.cart;
   }
 
   const result = await user.save();

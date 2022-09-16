@@ -288,11 +288,9 @@ const Header = () => {
               <Link
                 to="/products"
                 style={{ textDecoration: "none", color: "black" }}
+                key={item.id}
               >
-                <Categories
-                  key={item.id}
-                  onMouseOver={() => handleCategory(item.name)}
-                >
+                <Categories onMouseOver={() => handleCategory(item.name)}>
                   {item.name}
                 </Categories>
               </Link>
@@ -310,6 +308,7 @@ const Header = () => {
                         <Link
                           to="/products"
                           style={{ textDecoration: "none", color: "black" }}
+                          key={name}
                         >
                           <CategoryItem>{name}</CategoryItem>{" "}
                         </Link>

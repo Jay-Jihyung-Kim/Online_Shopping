@@ -9,6 +9,7 @@ import LockPersonIcon from "@mui/icons-material/LockPerson";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { Icon } from "@iconify/react";
 import { mobile } from "../util/responsive";
+import store from "../redux/store";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -149,10 +150,11 @@ const RegisterForm = styled.form`
   display: ${(props) => (props.display === "register" ? "block" : "none")};
   position: relative;
 `;
-const Error = styled.span`
+const ErrorText = styled.p`
   font-size: 20px;
   color: red;
   font-weight: 200;
+  margin: 10px 0;
 `;
 
 const Validation = styled.span`
@@ -200,6 +202,8 @@ const ThankyouMessage = styled.span`
 const Registration = () => {
   YupPassword(Yup);
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState("");
+  const [registerError, setRegisterError] = useState("");
   const [status, setStatus] = useState("sign");
   const [passwordGuide, setPasswordGuide] = useState("none");
   const [registerComplete, setRegisterComplete] = useState(false);
@@ -250,7 +254,9 @@ const Registration = () => {
         }, 3000);
         console.log("register form filled");
       } catch (err) {
-        console.log(err);
+        if (err.response?.status === 409) {
+          setRegisterError("This Email is already registered");
+        }
       }
     },
   });
@@ -274,16 +280,21 @@ const Registration = () => {
           email: values.email.toLowerCase(),
           password: values.password,
         });
-        // const user = {
-        //   token: response.data.token,
-        //   email: values.email.toLowerCase(),
-        //   userId: response.data.user_id,
-        // };
-
+        store.dispatch({
+          type: "SET_USERS",
+          payload: {
+            email: values.email.toLowerCase(),
+            token: response.data.token,
+            userId: response.data.user_id,
+          },
+        });
+        // navigate("/");
         console.log("login form filled");
-        console.log(response);
+        console.log(store.getState());
       } catch (err) {
-        console.log(err);
+        if (err.response?.status === 400) {
+          setLoginError("Invalid Email or Password");
+        }
       }
     },
   });
@@ -341,9 +352,6 @@ const Registration = () => {
               placeholder="Email"
               error={login.errors.email}
             />
-            <Error>
-              {login.errors.email ? <p>{login.errors.email}</p> : null}
-            </Error>
           </div>
           <div>
             <Label htmlFor="password"></Label>
@@ -355,9 +363,6 @@ const Registration = () => {
               type="password"
               placeholder="Password"
             />
-            <Error>
-              {login.errors.password ? <p>{login.errors.password}</p> : null}
-            </Error>
           </div>
           <InputTagContainer>
             <RememberTag>
@@ -374,7 +379,10 @@ const Registration = () => {
               Forgot Your Password?
             </ForgotPassword>
           </InputTagContainer>
-          <Button type="submit">Sign In</Button>
+          {loginError ? <ErrorText>{loginError}</ErrorText> : null}
+          <Button type="submit" style={{ marginTop: "10px" }}>
+            Sign In
+          </Button>
           <Button
             style={{
               background: "white",
@@ -422,11 +430,11 @@ const Registration = () => {
               placeholder="First Name"
               error={register.errors.firstName}
             />
-            <Error>
+            <ErrorText>
               {register.errors.firstName ? (
                 <p>{register.errors.firstName}</p>
               ) : null}
-            </Error>
+            </ErrorText>
           </div>
           <div>
             <Label htmlFor="lastName"></Label>
@@ -439,11 +447,11 @@ const Registration = () => {
               placeholder="Last Name"
               error={register.errors.lastName}
             />
-            <Error>
+            <ErrorText>
               {register.errors.lastName ? (
                 <p>{register.errors.lastName}</p>
               ) : null}
-            </Error>
+            </ErrorText>
           </div>
           <div>
             <Label htmlFor="registerEmail"></Label>
@@ -456,11 +464,11 @@ const Registration = () => {
               placeholder="Email"
               error={register.errors.registerEmail}
             />
-            <Error>
+            <ErrorText>
               {register.errors.registerEmail ? (
                 <p>{register.errors.registerEmail}</p>
               ) : null}
-            </Error>
+            </ErrorText>
           </div>
           <div>
             <Label htmlFor="registerPassword"></Label>
@@ -474,11 +482,11 @@ const Registration = () => {
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
-            <Error>
+            <ErrorText>
               {register.errors.registerPassword ? (
                 <p>{register.errors.registerPassword}</p>
               ) : null}
-            </Error>
+            </ErrorText>
             <Validation display={passwordGuide}>
               <span style={{ color: "rgba(0, 0, 0, 0.8) " }}>
                 Your password must...
@@ -519,16 +527,18 @@ const Registration = () => {
               type="password"
               placeholder="Confirm Password"
             />
-            <Error>
+            <ErrorText>
               {register.errors.confirmPassword ? (
                 <p>{register.errors.confirmPassword}</p>
               ) : null}
-            </Error>
+            </ErrorText>
           </div>
           <RegisterText>
             I agree to the Website <u>Terms of Use</u>, and the{" "}
             <u>Privacy Policy</u>.
           </RegisterText>
+
+          <ErrorText>{registerError}</ErrorText>
           <Button type="submit">Create Account</Button>
         </RegisterForm>
       </Container>

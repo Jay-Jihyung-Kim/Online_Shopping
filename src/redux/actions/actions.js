@@ -6,3 +6,10 @@ export const setUser = (user) => {
     payload: user,
   };
 };
+
+export const setCart = (cart) => {
+  return {
+    type: ActionTypes.SET_CARTS,
+    payload: cart,
+  };
+};

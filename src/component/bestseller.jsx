@@ -72,7 +72,7 @@ const BestSeller = () => {
       <BestCategoryContainer>
         {bestsellerlist.map((item) => {
           return (
-            <CategoryCard>
+            <CategoryCard key={item.id}>
               <CategoryImage src={item.image} />
               <CategoryName>{item.category}</CategoryName>
             </CategoryCard>

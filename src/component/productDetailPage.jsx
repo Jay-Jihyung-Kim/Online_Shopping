@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { small, mobile } from "../util/responsive";
 import { productImage } from "../data/productMenData";
 import Box from "@mui/material/Box";
@@ -9,6 +10,8 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import PromoItems from "./promoitems";
 import Subscribe from "./subscribe";
+import store from "../redux/store";
+import axios from "axios";
 
 const Container = styled.div`
   font-family: "Libre Baskerville", serif;
@@ -140,8 +143,10 @@ const sizes = [
 
 const ProductDetailPage = (props) => {
   const [currentColor, setCurrentColor] = useState("Pink-Red");
-  const [currentSize, setCurrentSize] = useState("");
-  const [currentQuantity, setCurrentQuantity] = useState();
+  const [currentSize, setCurrentSize] = useState("M");
+  const [currentQuantity, setCurrentQuantity] = useState(1);
+  const navigate = useNavigate();
+  const currentUser = store.getState().user;
 
   const { item } = props;
   const currentItem = item[0];
@@ -165,6 +170,31 @@ const ProductDetailPage = (props) => {
 
   const handleQuantityChange = (e) => {
     setCurrentQuantity(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    if (currentUser === null) {
+      navigate("/account-login");
+    }
+    try {
+      await axios.put("http://localhost:3001/users", {
+        email: currentUser.email,
+        cart: {
+          url: currentItem.url,
+          name: currentItem.name,
+          price: currentItem.price,
+          size: currentSize,
+          color: currentColor,
+          quantity: currentQuantity,
+          id: currentItem.id,
+        },
+      });
+      window.scrollTo(0, 0);
+      navigate("/cart");
+      console.log("success!");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -237,7 +267,9 @@ const ProductDetailPage = (props) => {
                   </Select>
                 </FormControl>
               </Box>
-              <ProductAddtoCart>Add to Cart</ProductAddtoCart>
+              <ProductAddtoCart onClick={handleSubmit}>
+                Add to Cart
+              </ProductAddtoCart>
             </FlexContainer>
           </ProductDetailCategory>
         </ProductDetail>
@@ -249,7 +281,7 @@ const ProductDetailPage = (props) => {
           {filteredItem.length > 4
             ? filteredItem.slice(0, 4).map((item) => {
                 return (
-                  <a href={`/products/${item.id}`}>
+                  <a key={item.id} href={`/products/${item.id}`}>
                     <RecommendationImageContainer>
                       <RecommendationImage src={item.url} />
                       <RecommendationText>{item.name}</RecommendationText>
@@ -260,7 +292,7 @@ const ProductDetailPage = (props) => {
               })
             : filteredItem.map((item) => {
                 return (
-                  <a href={`/products/${item.id}`}>
+                  <a key={item.id} href={`/products/${item.id}`}>
                     <RecommendationImageContainer>
                       <RecommendationImage src={item.url} />
                       <RecommendationText>{item.name}</RecommendationText>

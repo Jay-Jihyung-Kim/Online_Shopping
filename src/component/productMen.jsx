@@ -200,9 +200,13 @@ const ProductItems = styled.div`
   grid-template-columns: repeat(4, 1fr);
   margin: 0 auto;
   grid-gap: 20px;
-  ${mobile({ gridTemplateColumns: "repeat(4,1fr)", gap: "10px" })}
-  ${small({ gridTemplateColumns: "repeat(2,1fr)", gap: "7px" })}
-& > a {
+  ${mobile({ gridTemplateColumns: "repeat(4,1fr)", gap: "10px" })};
+  @media screen and (max-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+  }
+  ${small({ gridTemplateColumns: "repeat(2,1fr)", gap: "7px" })};
+  & > a {
     color: inherit;
     text-decoration: inherit;
   }

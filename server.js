@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const users = require("./backend/routes/userRoute");
 const auth = require("./backend/routes/authRoute");
+const cart = require("./backend/routes/cartRoute");
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +21,7 @@ const port = process.env.PORT || 3001;
 
 app.use("/users", users);
 app.use("/auth", auth);
+app.use("/cart", cart);
 
 app.listen(port, function () {
   console.log("server running on port 3001");

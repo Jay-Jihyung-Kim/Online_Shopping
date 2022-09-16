@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { small, mobile } from "../util/responsive";
 import Box from "@mui/material/Box";
@@ -13,10 +14,12 @@ import { productImage } from "../data/productMenData";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import store from "../redux/store";
+import axios from "axios";
 
 //Empty
 const EmptyContainer = styled.div`
-  display: none;
+  display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 600px;
@@ -81,8 +84,6 @@ const StyledLink = styled(Link)`
   alignitems: center;
 `;
 
-const item = productImage[0];
-
 //Cart with Item
 const FlexRow = styled.div`
   display: flex;
@@ -134,6 +135,12 @@ const ItemImage = styled.img`
   max-height: 154px;
   margin-right: 20px;
   flex: 40%;
+  ${mobile({
+    marginRight: "0px",
+    paddingRight: "10px",
+    height: "144px",
+    minWidth: "124px",
+  })}
 `;
 
 const ItemContainerRight = styled.div`
@@ -169,155 +176,281 @@ const CheckOutButton = styled.button`
   width: 100%;
   height: 40px;
 `;
+const ThankyouContainer = styled.div`
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+  top: 0;
+  display: ${(props) => (props.status === true ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+`;
+const ThankyouMessage = styled.span`
+  color: white;
+  font-size: 36px;
+  background-color: #253746;
+  padding: 30px;
+  text-align: center;
+`;
 
 const UserCart = () => {
   const [currentQuantity, setCurrentQuantity] = useState(1);
+  const [currentItem, setCurrentItem] = useState();
+  const [currentCart, setCurrentCart] = useState();
+  const [totalPrice, setTotalPrice] = useState([]);
+  const [payment, setPayment] = useState(false);
+  const currentUser = store.getState().user;
+  const navigate = useNavigate();
 
   const handleQuantityChange = (e) => {
     setCurrentQuantity(e.target.value);
+  };
+
+  const handleItemIdentify = (name) => {
+    setCurrentItem(name);
+  };
+
+  const handleDeleteItem = (obj) => {
+    const newCart =
+      currentCart && currentCart.filter((item) => item.name !== obj);
+    setCurrentCart(newCart);
+  };
+
+  const handleCheckout = async () => {
+    setPayment(true);
+    window.scrollTo(0, 0);
+    setTimeout(async () => {
+      await axios.put(`http://localhost:3001/users/` + currentUser.userId, {
+        cart: [],
+      });
+      navigate("/");
+    }, 3000);
+  };
+
+  const toProduct = (id) => {
+    navigate("/products/" + id);
   };
 
   function toTop() {
     window.scrollTo(0, 0);
   }
 
+  useEffect(() => {
+    const callCurrentCart = async () => {
+      const user = await axios.get(
+        `http://localhost:3001/users/` + currentUser.userId
+      );
+      const cart = user.data.cart;
+      setCurrentCart(cart);
+    };
+    callCurrentCart();
+  }, []);
+
+  useEffect(() => {
+    const newCart =
+      currentCart &&
+      currentCart.map((item) => {
+        if (item.name === currentItem) {
+          return { ...item, quantity: currentQuantity };
+        }
+        return item;
+      });
+    setCurrentCart(newCart);
+  }, [currentQuantity]);
+
+  useEffect(() => {
+    let subtotal = 0;
+    if (currentCart && currentCart.length > 0) {
+      currentCart.map((item) => {
+        subtotal = subtotal + item.quantity * item.price;
+      });
+    }
+    let estimatedTax = subtotal * 0.0775;
+    let newTax = Math.round(estimatedTax * 100) / 100;
+    let total = newTax + subtotal;
+    setTotalPrice([subtotal, newTax.toFixed(2), total.toFixed(2)]);
+  }, [currentCart]);
+
+  useEffect(() => {
+    const UpdateCart = async () => {
+      await axios.put(`http://localhost:3001/users/` + currentUser.userId, {
+        cart: currentCart,
+      });
+    };
+    UpdateCart();
+  }, [currentCart]);
+
   return (
     <React.Fragment>
-      <EmptyContainer>
-        <IconContainer>
-          <ShoppingCartIcon style={{ fontSize: "50px", color: "#253746" }} />
-        </IconContainer>
-        <LargeText>Your Shopping Cart is Empty</LargeText>
-        <SmallText>Did you have items in your bag?</SmallText>
-        <StyledLink to="/account-login">
-          <BigButton>Sign In</BigButton>
-        </StyledLink>
-        <SmallButtonContainer>
-          <StyledLink to="/products">
-            <SmallButton>Shop Men's</SmallButton>
-          </StyledLink>
-          <StyledLink to="/products">
-            <SmallButton>Shop Women's</SmallButton>
-          </StyledLink>
-        </SmallButtonContainer>
-      </EmptyContainer>
-
-      <ItemContainer>
-        <ItemContainerLeft>
-          <LargeText>My Cart (1)</LargeText>
-          <ItemPurchaseContainer>
-            <ItemImage src={item.url} />
-            <DetailContainerRight>
-              <FlexColumn style={{ lineHeight: "1" }}>
-                <MediumText>{item.name}</MediumText>
-                <SmallText style={{ fontSize: "13px", color: "gray" }}>
-                  Color: Cyan
-                </SmallText>
-              </FlexColumn>
-              <DetailContainerLeft>
-                <Box sx={{ width: 50 }}>
-                  <FormControl fullWidth>
-                    <Select
-                      variant="standard"
-                      value={currentQuantity}
-                      onChange={handleQuantityChange}
+      {currentCart && currentCart.length > 0 ? (
+        <React.Fragment>
+          <ItemContainer>
+            <ItemContainerLeft>
+              <LargeText>My Cart ({currentCart.length})</LargeText>
+              {currentCart.map((item) => {
+                return (
+                  <ItemPurchaseContainer
+                    onClick={() => handleItemIdentify(item.name)}
+                  >
+                    <ItemImage
+                      src={item.url}
+                      onClick={() => toProduct(item.id)}
+                    />
+                    <DetailContainerRight>
+                      <FlexColumn style={{ lineHeight: "1" }}>
+                        <MediumText>{item.name}</MediumText>
+                        <SmallText
+                          style={{
+                            fontSize: "13px",
+                            color: "gray",
+                            marginTop: "2px",
+                          }}
+                        >
+                          Color: {item.color}
+                        </SmallText>
+                      </FlexColumn>
+                      <DetailContainerLeft>
+                        <Box sx={{ width: 50 }}>
+                          <FormControl fullWidth>
+                            <Select
+                              variant="standard"
+                              value={item.quantity}
+                              onChange={handleQuantityChange}
+                              style={{
+                                fontSize: "14px",
+                                textAlign: "center",
+                                width: "50px",
+                              }}
+                            >
+                              <MenuItem value={"1"}>1</MenuItem>
+                              <MenuItem value={"2"}>2</MenuItem>
+                              <MenuItem value={"3"}>3</MenuItem>
+                              <MenuItem value={"4"}>4</MenuItem>
+                              <MenuItem value={"5"}>5</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Box>
+                        <MediumText>${item.price}</MediumText>
+                      </DetailContainerLeft>
+                    </DetailContainerRight>
+                    <BsXLg
                       style={{
-                        fontSize: "14px",
-                        textAlign: "center",
-                        width: "50px",
+                        marginLeft: "20px",
+                        marginTop: "8px",
+                        fontSize: "20px",
                       }}
-                    >
-                      <MenuItem value={"1"}>1</MenuItem>
-                      <MenuItem value={"2"}>2</MenuItem>
-                      <MenuItem value={"3"}>3</MenuItem>
-                      <MenuItem value={"4"}>4</MenuItem>
-                      <MenuItem value={"5"}>5</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-                <MediumText>${item.price}</MediumText>
-              </DetailContainerLeft>
-            </DetailContainerRight>
-
-            <BsXLg
-              style={{
-                marginLeft: "20px",
-                marginTop: "8px",
-                fontSize: "20px",
-              }}
-            />
-          </ItemPurchaseContainer>
-        </ItemContainerLeft>
-        <ItemContainerRight>
-          <SignInContainer>
-            <StyledLink to="/account-login">
-              <FlexColumn onClick={toTop}>
-                <MediumText>Earn Points with this order!</MediumText>
+                      onClick={() => handleDeleteItem(item.name)}
+                    />
+                  </ItemPurchaseContainer>
+                );
+              })}
+            </ItemContainerLeft>
+            <ItemContainerRight>
+              <SignInContainer>
+                <StyledLink to="/account-login">
+                  <FlexColumn onClick={toTop}>
+                    <MediumText>Earn Points with this order!</MediumText>
+                    <SmallText>
+                      <u style={{ marginRight: "5px" }}>
+                        <b>Sign In</b>
+                      </u>
+                      with your email
+                    </SmallText>
+                  </FlexColumn>
+                </StyledLink>
+                <ArrowForwardIosIcon />
+              </SignInContainer>
+              <SummaryContainer>
+                <MediumText>Order Summary</MediumText>
+                <FlexRow>
+                  <SmallText>Subtotal</SmallText>
+                  <SmallText>${totalPrice[0]}.00</SmallText>
+                </FlexRow>
+                <FlexRow>
+                  <SmallText>Standard Shipping</SmallText>
+                  <SmallText>Free</SmallText>
+                </FlexRow>
+                <FlexRow>
+                  <SmallText>Estimated Tax</SmallText>
+                  <SmallText>${totalPrice[1]}</SmallText>
+                </FlexRow>
+                <FlexRow>
+                  <MediumText>Total</MediumText>
+                  <MediumText>${totalPrice[2]}</MediumText>
+                </FlexRow>
+              </SummaryContainer>
+              <CheckOutContainer>
+                <CheckOutButton onClick={handleCheckout}>
+                  PROCEED TO CHECKOUT
+                </CheckOutButton>
+                <MediumText>Need Help?</MediumText>
                 <SmallText>
-                  <u style={{ marginRight: "5px" }}>
-                    <b>Sign In</b>
-                  </u>
-                  with your email
+                  <CallIcon
+                    style={{
+                      color: "gray",
+                      opacity: "80%",
+                      marginRight: "5px",
+                    }}
+                  />
+                  CALL US AT 1-800-000-0000
                 </SmallText>
-              </FlexColumn>
+                <SmallText
+                  style={{
+                    borderTop: "1px solid gray",
+                    borderBottom: "1px solid gray",
+                    padding: "15px 0",
+                  }}
+                >
+                  <EmailIcon
+                    style={{
+                      color: "gray",
+                      opacity: "80%",
+                      marginRight: "5px",
+                    }}
+                  />
+                  LEAVE US A MESSAGE
+                  <ArrowForwardIosIcon style={{ marginLeft: "auto" }} />
+                </SmallText>
+                <SmallText>
+                  <LocalShippingIcon
+                    style={{
+                      color: "gray",
+                      opacity: "80%",
+                      marginRight: "5px",
+                    }}
+                  />
+                  SHIPPING AND RETURNS
+                  <ArrowForwardIosIcon style={{ marginLeft: "auto" }} />
+                </SmallText>
+              </CheckOutContainer>
+            </ItemContainerRight>
+          </ItemContainer>
+          <ThankyouContainer status={payment}>
+            <ThankyouMessage>Thank You for your purchase!</ThankyouMessage>
+          </ThankyouContainer>
+        </React.Fragment>
+      ) : (
+        <EmptyContainer>
+          <IconContainer>
+            <ShoppingCartIcon style={{ fontSize: "50px", color: "#253746" }} />
+          </IconContainer>
+          <LargeText>Your Shopping Cart is Empty</LargeText>
+          <SmallText>Did you have items in your bag?</SmallText>
+          <StyledLink to="/account-login">
+            <BigButton>Sign In</BigButton>
+          </StyledLink>
+          <SmallButtonContainer>
+            <StyledLink to="/products">
+              <SmallButton>Shop Men's</SmallButton>
             </StyledLink>
-            <ArrowForwardIosIcon />
-          </SignInContainer>
-          <SummaryContainer>
-            <MediumText>Order Summary</MediumText>
-            <FlexRow>
-              <SmallText>Subtotal</SmallText>
-              <SmallText>Price</SmallText>
-            </FlexRow>
-            <FlexRow>
-              <SmallText>Standard Shipping</SmallText>
-              <SmallText>Free</SmallText>
-            </FlexRow>
-            <FlexRow>
-              <SmallText>Estimated Tax</SmallText>
-              <SmallText>Free</SmallText>
-            </FlexRow>
-            <FlexRow>
-              <MediumText>Total</MediumText>
-              <MediumText>Price</MediumText>
-            </FlexRow>
-          </SummaryContainer>
-          <CheckOutContainer>
-            <CheckOutButton>PROCEED TO CHECKOUT</CheckOutButton>
-            <MediumText>Need Help?</MediumText>
-            <SmallText>
-              <CallIcon
-                style={{ color: "gray", opacity: "80%", marginRight: "5px" }}
-              />
-              CALL US AT 1-800-000-0000
-            </SmallText>
-            <SmallText
-              style={{
-                borderTop: "1px solid gray",
-                borderBottom: "1px solid gray",
-                padding: "15px 0",
-              }}
-            >
-              <EmailIcon
-                style={{
-                  color: "gray",
-                  opacity: "80%",
-                  marginRight: "5px",
-                }}
-              />
-              LEAVE US A MESSAGE
-              <ArrowForwardIosIcon style={{ marginLeft: "auto" }} />
-            </SmallText>
-            <SmallText>
-              <LocalShippingIcon
-                style={{ color: "gray", opacity: "80%", marginRight: "5px" }}
-              />
-              SHIPPING AND RETURNS
-              <ArrowForwardIosIcon style={{ marginLeft: "auto" }} />
-            </SmallText>
-          </CheckOutContainer>
-        </ItemContainerRight>
-      </ItemContainer>
+            <StyledLink to="/products">
+              <SmallButton>Shop Women's</SmallButton>
+            </StyledLink>
+          </SmallButtonContainer>
+        </EmptyContainer>
+      )}
     </React.Fragment>
   );
 };
