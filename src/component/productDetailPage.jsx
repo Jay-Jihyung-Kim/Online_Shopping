@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { small, mobile } from "../util/responsive";
 import { productImage } from "../data/productMenData";
@@ -173,27 +173,28 @@ const ProductDetailPage = (props) => {
   };
 
   const handleSubmit = async () => {
-    if (currentUser === null) {
+    if (currentUser === undefined) {
       navigate("/account-login");
-    }
-    try {
-      await axios.put("http://localhost:3001/users", {
-        email: currentUser.email,
-        cart: {
-          url: currentItem.url,
-          name: currentItem.name,
-          price: currentItem.price,
-          size: currentSize,
-          color: currentColor,
-          quantity: currentQuantity,
-          id: currentItem.id,
-        },
-      });
-      window.scrollTo(0, 0);
-      navigate("/cart");
-      console.log("success!");
-    } catch (err) {
-      console.log(err);
+    } else {
+      try {
+        await axios.put("http://localhost:3001/users", {
+          email: currentUser.email,
+          cart: {
+            url: currentItem.url,
+            name: currentItem.name,
+            price: currentItem.price,
+            size: currentSize,
+            color: currentColor,
+            quantity: currentQuantity,
+            id: currentItem.id,
+          },
+        });
+        window.scrollTo(0, 0);
+        navigate("/cart");
+        console.log("success!");
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 

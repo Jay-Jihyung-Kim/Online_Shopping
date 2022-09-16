@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { GrLocation } from "react-icons/gr";
@@ -11,6 +11,9 @@ import {
   hiddenMenuKids,
 } from "../data/hiddenMenuItems";
 import { mobile } from "../util/responsive";
+import store from "../redux/store";
+import axios from "axios";
+import Badge from "@mui/material/Badge";
 import MobileFooter from "./mobilefooter";
 
 const Container = styled.div`
@@ -193,6 +196,8 @@ const Header = () => {
   const [currentCategory, setCurrentCategory] = useState(null);
   const [mobileCategory, setMobileCategory] = useState(null);
   const [openMobileMenu, setOpenMobileMenu] = useState("closed");
+  const [currentCart, setCurrentCart] = useState();
+  const currentUser = store.getState().user;
 
   const handleCategory = (category) => {
     if (category === "Women") {
@@ -226,6 +231,19 @@ const Header = () => {
   function toTop() {
     window.scrollTo(0, 0);
   }
+
+  useEffect(() => {
+    if (currentUser !== undefined) {
+      const callCurrentCart = async () => {
+        const user = await axios.get(
+          `http://localhost:3001/users/` + currentUser.userId
+        );
+        const cart = user.data.cart;
+        setCurrentCart(cart);
+      };
+      callCurrentCart();
+    }
+  }, [currentCart]);
 
   return (
     <Container>
@@ -271,12 +289,22 @@ const Header = () => {
               alignItems: "center",
             }}
           >
-            <BsCart style={{ fontSize: "20px" }} onClick={toTop} />
+            <Badge
+              badgeContent={currentCart && currentCart.length}
+              color="primary"
+            >
+              <BsCart style={{ fontSize: "20px" }} onClick={toTop} />
+            </Badge>
           </Link>
         </Right>
         <RightMobile>
           <StyledLink to="/cart">
-            <BsCart onClick={toTop} />
+            <Badge
+              badgeContent={currentCart && currentCart.length}
+              color="primary"
+            >
+              <BsCart onClick={toTop} />
+            </Badge>
           </StyledLink>
           <BsSearch style={{ fontSize: "23px" }} />
         </RightMobile>

@@ -10,7 +10,6 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { productImage } from "../data/productMenData";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
@@ -135,6 +134,7 @@ const ItemImage = styled.img`
   max-height: 154px;
   margin-right: 20px;
   flex: 40%;
+  cursor: pointer;
   ${mobile({
     marginRight: "0px",
     paddingRight: "10px",
@@ -231,6 +231,7 @@ const UserCart = () => {
 
   const toProduct = (id) => {
     navigate("/products/" + id);
+    window.location.reload(true);
   };
 
   function toTop() {
@@ -268,9 +269,14 @@ const UserCart = () => {
       });
     }
     let estimatedTax = subtotal * 0.0775;
-    let newTax = Math.round(estimatedTax * 100) / 100;
-    let total = newTax + subtotal;
-    setTotalPrice([subtotal, newTax.toFixed(2), total.toFixed(2)]);
+    let total = estimatedTax + subtotal;
+    const points = total * 0.05;
+    setTotalPrice([
+      subtotal,
+      estimatedTax.toFixed(2),
+      total.toFixed(2),
+      points.toFixed(0),
+    ]);
   }, [currentCart]);
 
   useEffect(() => {
@@ -353,10 +359,9 @@ const UserCart = () => {
                   <FlexColumn onClick={toTop}>
                     <MediumText>Earn Points with this order!</MediumText>
                     <SmallText>
-                      <u style={{ marginRight: "5px" }}>
-                        <b>Sign In</b>
-                      </u>
-                      with your email
+                      You are earning{" "}
+                      <b style={{ margin: "0px 4px" }}>{totalPrice[3]}</b>{" "}
+                      Points!
                     </SmallText>
                   </FlexColumn>
                 </StyledLink>
@@ -439,7 +444,7 @@ const UserCart = () => {
           <LargeText>Your Shopping Cart is Empty</LargeText>
           <SmallText>Did you have items in your bag?</SmallText>
           <StyledLink to="/account-login">
-            <BigButton>Sign In</BigButton>
+            <BigButton>My Account</BigButton>
           </StyledLink>
           <SmallButtonContainer>
             <StyledLink to="/products">
