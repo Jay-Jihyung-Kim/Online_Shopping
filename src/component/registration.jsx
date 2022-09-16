@@ -284,7 +284,7 @@ const Registration = () => {
 
     onSubmit: async (values, { resetForm }) => {
       try {
-        await axios.post("http://localhost:3001/api/users", {
+        await axios.post("/api/users", {
           firstName:
             values.firstName.charAt(0).toUpperCase() +
             values.firstName.slice(1).toLowerCase(),
@@ -324,7 +324,7 @@ const Registration = () => {
 
     onSubmit: async (values) => {
       try {
-        const response = await axios.post("http://localhost:3001/api/auth", {
+        const response = await axios.post("/api/auth", {
           email: values.email.toLowerCase(),
           password: values.password,
         });

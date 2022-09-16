@@ -191,7 +191,6 @@ const ProductDetailPage = (props) => {
         });
         window.scrollTo(0, 0);
         navigate("/cart");
-        console.log("success!");
       } catch (err) {
         console.log(err);
       }
