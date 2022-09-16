@@ -271,8 +271,8 @@ const Registration = () => {
       registerEmail: Yup.string()
         .email("Invalid Email Address")
         .required("Email is Required"),
-      firstName: Yup.string().required("Name is Required"),
-      lastName: Yup.string().required("Name is Required"),
+      firstName: Yup.string().required("Name is required"),
+      lastName: Yup.string().required("Name is required"),
       registerPassword: Yup.string()
         .required("Password is Required")
         .matches(/[A-Z]+/, "One Uppercase required")
