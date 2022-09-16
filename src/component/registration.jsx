@@ -256,6 +256,7 @@ const Registration = () => {
   const [passwordGuide, setPasswordGuide] = useState("none");
   const [registerComplete, setRegisterComplete] = useState(false);
   const currentUser = store.getState().user;
+  const baseURL = process.env.REACT_APP_API_URL;
 
   const register = useFormik({
     initialValues: {
@@ -284,7 +285,7 @@ const Registration = () => {
 
     onSubmit: async (values, { resetForm }) => {
       try {
-        await axios.post("/api/users", {
+        await axios.post(baseURL + "/api/users", {
           firstName:
             values.firstName.charAt(0).toUpperCase() +
             values.firstName.slice(1).toLowerCase(),
@@ -324,7 +325,7 @@ const Registration = () => {
 
     onSubmit: async (values) => {
       try {
-        const response = await axios.post("/api/auth", {
+        const response = await axios.post(baseURL + "/api/auth", {
           email: values.email.toLowerCase(),
           password: values.password,
         });
