@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "../component/header";
-import Registration from "../component/registration2";
+import Registration from "../component/registration";
 import Footer from "../component/footer";
 import SaleBanner from "../component/salebanner";
 

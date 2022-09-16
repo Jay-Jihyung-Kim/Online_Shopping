@@ -301,7 +301,6 @@ const Registration = () => {
           toTop();
           setRegisterComplete(false);
         }, 3000);
-        console.log("register form filled");
       } catch (err) {
         if (err.response?.status === 409) {
           setRegisterError("This Email is already registered");
@@ -339,7 +338,6 @@ const Registration = () => {
           },
         });
         navigate("/cart");
-        console.log("login form filled");
       } catch (err) {
         if (err.response?.status === 400) {
           setLoginError("Invalid Email or Password");
@@ -347,8 +345,6 @@ const Registration = () => {
       }
     },
   });
-
-  console.log(currentUser);
 
   function handleClick(list) {
     setStatus(list);
@@ -389,7 +385,6 @@ const Registration = () => {
     });
     navigate("/");
     toTop();
-    console.log("Signed Out");
   }
 
   return (

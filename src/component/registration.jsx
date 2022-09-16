@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import * as Yup from "yup";
 import YupPassword from "yup-password";
 import styled, { css } from "styled-components";
 import LockPersonIcon from "@mui/icons-material/LockPerson";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { Icon } from "@iconify/react";
-import { mobile } from "../util/responsive";
+import { small, mobile } from "../util/responsive";
+import store from "../redux/store";
 
 const Container = styled.div`
   margin: 0 auto;
@@ -147,10 +150,11 @@ const RegisterForm = styled.form`
   display: ${(props) => (props.display === "register" ? "block" : "none")};
   position: relative;
 `;
-const Error = styled.span`
+const ErrorText = styled.p`
   font-size: 20px;
   color: red;
   font-weight: 200;
+  margin: 10px 0;
 `;
 
 const Validation = styled.span`
@@ -176,16 +180,86 @@ const RegisterText = styled.p`
   }
 `;
 
+const ThankyouContainer = styled.div`
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
+  top: 0;
+  display: ${(props) => (props.status === true ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+`;
+const ThankyouMessage = styled.span`
+  color: white;
+  font-size: 36px;
+  background-color: #253746;
+  padding: 30px;
+  text-align: center;
+`;
+
+const SigninContainer = styled.div`
+  margin: 0 auto;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: 35% 65%;
+  height: 100%;
+  background-color: #fffff0;
+  ${mobile({ gridTemplateColumns: "45% 55%" })}
+  ${small({ display: "flex", justifyContent: "center", width: "100%" })}
+`;
+
+const AccountContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
+  padding-left: 30px;
+  font-family: "Libre Baskerville", serif;
+  ${small({ margin: "20px 0", padding: "30px;" })}
+`;
+const WelcomeText = styled.span`
+  font-size: 36px;
+  ${mobile({ fontSize: "26px" })}
+`;
+const AccountList = styled.span`
+  font-size: 20px;
+  margin-top: 10px;
+  font-weight: bold;
+`;
+const AccountText = styled.span`
+  font-size: 15;
+  margin-top: 10px;
+  cursor: pointer;
+`;
+const AccountImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  ${small({ display: "none" })}
+`;
+
+const SignOutButton = styled.button`
+  width: 120px;
+  background-color: white;
+  border: 1px solid gray;
+  text-transform: uppercase;
+  margin-top: 50px;
+`;
+
 const Registration = () => {
   YupPassword(Yup);
+  const navigate = useNavigate();
+  const [loginError, setLoginError] = useState("");
+  const [registerError, setRegisterError] = useState("");
   const [status, setStatus] = useState("sign");
   const [passwordGuide, setPasswordGuide] = useState("none");
+  const [registerComplete, setRegisterComplete] = useState(false);
+  const currentUser = store.getState().user;
 
-  const formik = useFormik({
+  const register = useFormik({
     initialValues: {
-      email: "",
       registerEmail: "",
-      password: "",
       firstName: "",
       lastName: "",
       registerPassword: "",
@@ -193,13 +267,9 @@ const Registration = () => {
     },
     validateOnChange: false,
     validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid Email Address")
-        .required("Email is Required"),
       registerEmail: Yup.string()
         .email("Invalid Email Address")
         .required("Email is Required"),
-      password: Yup.string().required("Password is Required"),
       firstName: Yup.string().required("Name is Required"),
       lastName: Yup.string().required("Name is Required"),
       registerPassword: Yup.string()
@@ -212,9 +282,67 @@ const Registration = () => {
         .oneOf([Yup.ref("registerPassword")], "Your passwords do not match."),
     }),
 
-    onSubmit: (values) => {
-      console.log(values);
-      console.log("submitted");
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        await axios.post("http://localhost:3001/api/users", {
+          firstName:
+            values.firstName.charAt(0).toUpperCase() +
+            values.firstName.slice(1).toLowerCase(),
+          lastName:
+            values.lastName.charAt(0).toUpperCase() +
+            values.lastName.slice(1).toLowerCase(),
+          email: values.registerEmail.toLowerCase(),
+          password: values.registerPassword,
+        });
+        resetForm();
+        setRegisterComplete(true);
+        setTimeout(() => {
+          navigate("/");
+          toTop();
+          setRegisterComplete(false);
+        }, 3000);
+      } catch (err) {
+        if (err.response?.status === 409) {
+          setRegisterError("This Email is already registered");
+        }
+      }
+    },
+  });
+
+  const login = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validateOnChange: false,
+    ValidationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid Email Address")
+        .required("Email is Required"),
+      password: Yup.string().required("Password is Required"),
+    }),
+
+    onSubmit: async (values) => {
+      try {
+        const response = await axios.post("http://localhost:3001/api/auth", {
+          email: values.email.toLowerCase(),
+          password: values.password,
+        });
+        store.dispatch({
+          type: "SET_USERS",
+          payload: {
+            email: values.email.toLowerCase(),
+            token: response.data.token,
+            userId: response.data.user_id,
+            name: response.data.firstName,
+          },
+        });
+        navigate("/cart");
+      } catch (err) {
+        if (err.response?.status === 400) {
+          setLoginError("Invalid Email or Password");
+        }
+      }
     },
   });
 
@@ -243,214 +371,261 @@ const Registration = () => {
     setPasswordGuide("none");
   }
 
+  function toTop() {
+    window.scrollTo(0, 0);
+  }
+
+  function toCart() {
+    navigate("/cart");
+  }
+
+  function handleSignOut() {
+    store.dispatch({
+      type: "REMOVE_SELECTED_USERS",
+    });
+    navigate("/");
+    toTop();
+  }
+
   return (
-    <Container>
-      <ListContainer>
-        <Sign onClick={() => handleClick("sign")} status={status}>
-          Sign In
-        </Sign>
-        <Register onClick={() => handleClick("register")} status={status}>
-          Register
-        </Register>
-      </ListContainer>
-      <SigninForm onSubmit={formik.handleSubmit} display={status}>
-        <Title>Sign In To Your Account</Title>
-        <div>
-          <Label htmlFor="email"></Label>
-          <Input
-            value={formik.values.email}
-            name="email"
-            onChange={formik.handleChange}
-            id="email"
-            type="text"
-            placeholder="Email"
-            error={formik.errors.email}
+    <React.Fragment>
+      {currentUser && currentUser !== null ? (
+        <SigninContainer>
+          <AccountContainer>
+            <WelcomeText>Welcome, {currentUser.name}</WelcomeText>
+            <AccountList>My Orders</AccountList>
+            <AccountText onClick={toCart}>Your Cart</AccountText>
+            <SignOutButton onClick={handleSignOut}>Sign Out</SignOutButton>
+          </AccountContainer>
+          <AccountImage
+            src={
+              "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+            }
           />
-          <Error>
-            {formik.errors.email ? <p>{formik.errors.email}</p> : null}
-          </Error>
-        </div>
-        <div>
-          <Label htmlFor="password"></Label>
-          <Input
-            value={formik.values.password}
-            name="password"
-            onChange={formik.handleChange}
-            id="password"
-            type="password"
-            placeholder="Password"
-          />
-          <Error>
-            {formik.errors.password ? <p>{formik.errors.password}</p> : null}
-          </Error>
-        </div>
-        <InputTagContainer>
-          <RememberTag>
-            <input
-              type="checkbox"
-              id="Remember"
-              name="Remember"
-              style={{ marginRight: "3px" }}
-            />
-            <label>Remember me</label>
-          </RememberTag>
-          <ForgotPassword>
-            <LockPersonIcon style={{ fontSize: "20px" }} />
-            Forgot Your Password?
-          </ForgotPassword>
-        </InputTagContainer>
-        <Button type="submit">Sign In</Button>
-        <Button
-          style={{
-            background: "white",
-            color: "black",
-            border: "1px solid rgba(0,0,0,.5)",
-            fontWeight: "200",
-          }}
-          type="submit"
-        >
-          <Icon
-            icon="flat-color-icons:google"
-            style={{ fontSize: "20px", marginRight: "5px" }}
-          />
-          Sign in with Google
-        </Button>
-        <Button
-          style={{
-            background: "white",
-            color: "black",
-            border: "1px solid rgba(0,0,0,.5)",
-            fontWeight: "200",
-          }}
-          type="submit"
-        >
-          <FacebookIcon
-            style={{
-              color: "#3B5998",
-              fontSize: "20px",
-              marginRight: "5px",
-            }}
-          />
-          Sign in with Facebook
-        </Button>
-      </SigninForm>
-      <RegisterForm onSubmit={formik.handleSubmit} display={status}>
-        <Title>Create a New Account</Title>
-        <div>
-          <Label htmlFor="firstName"></Label>
-          <Input
-            value={formik.values.firstName}
-            name="firstName"
-            onChange={formik.handleChange}
-            id="firstName"
-            type="text"
-            placeholder="First Name"
-            error={formik.errors.firstName}
-          />
-          <Error>
-            {formik.errors.firstName ? <p>{formik.errors.firstName}</p> : null}
-          </Error>
-        </div>
-        <div>
-          <Label htmlFor="lastName"></Label>
-          <Input
-            value={formik.values.lastName}
-            name="lastName"
-            onChange={formik.handleChange}
-            id="lastName"
-            type="text"
-            placeholder="Last Name"
-            error={formik.errors.lastName}
-          />
-          <Error>
-            {formik.errors.lastName ? <p>{formik.errors.lastName}</p> : null}
-          </Error>
-        </div>
-        <div>
-          <Label htmlFor="registerEmail"></Label>
-          <Input
-            value={formik.values.registerEmail}
-            name="registerEmail"
-            onChange={formik.handleChange}
-            id="registerEmail"
-            type="text"
-            placeholder="Email"
-            error={formik.errors.registerEmail}
-          />
-          <Error>
-            {formik.errors.registerEmail ? (
-              <p>{formik.errors.registerEmail}</p>
-            ) : null}
-          </Error>
-        </div>
-        <div>
-          <Label htmlFor="registerPassword"></Label>
-          <Input
-            value={formik.values.registerPassword}
-            name="registerPassword"
-            onChange={formik.handleChange}
-            id="RegisterPassword"
-            type="password"
-            placeholder="Password"
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
-          <Error>
-            {formik.errors.registerPassword ? (
-              <p>{formik.errors.registerPassword}</p>
-            ) : null}
-          </Error>
-          <Validation display={passwordGuide}>
-            <span style={{ color: "rgba(0, 0, 0, 0.8) " }}>
-              Your password must...
-            </span>
-            {formik.values.registerPassword.length > 8 ? (
-              <span style={{ color: "green" }}>
-                Have minimum of 8 characters
-              </span>
-            ) : (
-              <span>Have minimum of 8 characters</span>
-            )}
-            {isUpper(formik.values.registerPassword) ? (
-              <span style={{ color: "green" }}>Have 1 uppercase character</span>
-            ) : (
-              <span>Have 1 uppercase character</span>
-            )}
-            {hasNumber(formik.values.registerPassword) ? (
-              <span style={{ color: "green" }}>Have 1 number</span>
-            ) : (
-              <span>Have 1 number</span>
-            )}
-            {containsSpecialChars(formik.values.registerPassword) ? (
-              <span style={{ color: "green" }}>Have 1 special character</span>
-            ) : (
-              <span>Have 1 special character</span>
-            )}
-          </Validation>
-        </div>
-        <div>
-          <Label htmlFor="confirmPassword"></Label>
-          <Input
-            value={formik.values.confirmPassword}
-            name="confirmPassword"
-            onChange={formik.handleChange}
-            id="ConfirmPassword"
-            type="password"
-            placeholder="Confirm Password"
-          />
-          <Error>
-            {formik.errors.confirmPassword ? (
-              <p>{formik.errors.confirmPassword}</p>
-            ) : null}
-          </Error>
-        </div>
-        <RegisterText>
-          I agree to the Website <u>Terms of Use</u>, and the{" "}
-          <u>Privacy Policy</u>.
-        </RegisterText>
-        <Button type="submit">Create Account</Button>
-      </RegisterForm>
-    </Container>
+        </SigninContainer>
+      ) : (
+        <React.Fragment>
+          <Container>
+            <ListContainer>
+              <Sign onClick={() => handleClick("sign")} status={status}>
+                Sign In
+              </Sign>
+              <Register onClick={() => handleClick("register")} status={status}>
+                Register
+              </Register>
+            </ListContainer>
+            <SigninForm onSubmit={login.handleSubmit} display={status}>
+              <Title>Sign In To Your Account</Title>
+              <div>
+                <Label htmlFor="email"></Label>
+                <Input
+                  value={login.values.email}
+                  name="email"
+                  onChange={login.handleChange}
+                  id="email"
+                  type="text"
+                  placeholder="Email"
+                  error={login.errors.email}
+                />
+              </div>
+              <div>
+                <Label htmlFor="password"></Label>
+                <Input
+                  value={login.values.password}
+                  name="password"
+                  onChange={login.handleChange}
+                  id="password"
+                  type="password"
+                  placeholder="Password"
+                />
+              </div>
+              <InputTagContainer>
+                <RememberTag>
+                  <input
+                    type="checkbox"
+                    id="Remember"
+                    name="Remember"
+                    style={{ marginRight: "3px" }}
+                  />
+                  <label>Remember me</label>
+                </RememberTag>
+                <ForgotPassword>
+                  <LockPersonIcon style={{ fontSize: "20px" }} />
+                  Forgot Your Password?
+                </ForgotPassword>
+              </InputTagContainer>
+              {loginError ? <ErrorText>{loginError}</ErrorText> : null}
+              <Button type="submit" style={{ marginTop: "10px" }}>
+                Sign In
+              </Button>
+              <Button
+                style={{
+                  background: "white",
+                  color: "black",
+                  border: "1px solid rgba(0,0,0,.5)",
+                  fontWeight: "200",
+                }}
+                type="submit"
+              >
+                <Icon
+                  icon="flat-color-icons:google"
+                  style={{ fontSize: "20px", marginRight: "5px" }}
+                />
+                Sign in with Google
+              </Button>
+              <Button
+                style={{
+                  background: "white",
+                  color: "black",
+                  border: "1px solid rgba(0,0,0,.5)",
+                  fontWeight: "200",
+                }}
+                type="submit"
+              >
+                <FacebookIcon
+                  style={{
+                    color: "#3B5998",
+                    fontSize: "20px",
+                    marginRight: "5px",
+                  }}
+                />
+                Sign in with Facebook
+              </Button>
+            </SigninForm>
+            <RegisterForm onSubmit={register.handleSubmit} display={status}>
+              <Title>Create a New Account</Title>
+              <div>
+                <Label htmlFor="firstName"></Label>
+                <Input
+                  value={register.values.firstName}
+                  name="firstName"
+                  onChange={register.handleChange}
+                  id="firstName"
+                  type="text"
+                  placeholder="First Name"
+                  error={register.errors.firstName}
+                />
+                <ErrorText>
+                  {register.errors.firstName ? (
+                    <p>{register.errors.firstName}</p>
+                  ) : null}
+                </ErrorText>
+              </div>
+              <div>
+                <Label htmlFor="lastName"></Label>
+                <Input
+                  value={register.values.lastName}
+                  name="lastName"
+                  onChange={register.handleChange}
+                  id="lastName"
+                  type="text"
+                  placeholder="Last Name"
+                  error={register.errors.lastName}
+                />
+                <ErrorText>
+                  {register.errors.lastName ? (
+                    <p>{register.errors.lastName}</p>
+                  ) : null}
+                </ErrorText>
+              </div>
+              <div>
+                <Label htmlFor="registerEmail"></Label>
+                <Input
+                  value={register.values.registerEmail}
+                  name="registerEmail"
+                  onChange={register.handleChange}
+                  id="registerEmail"
+                  type="text"
+                  placeholder="Email"
+                  error={register.errors.registerEmail}
+                />
+                <ErrorText>
+                  {register.errors.registerEmail ? (
+                    <p>{register.errors.registerEmail}</p>
+                  ) : null}
+                </ErrorText>
+              </div>
+              <div>
+                <Label htmlFor="registerPassword"></Label>
+                <Input
+                  value={register.values.registerPassword}
+                  name="registerPassword"
+                  onChange={register.handleChange}
+                  id="RegisterPassword"
+                  type="password"
+                  placeholder="Password"
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                />
+                <ErrorText>
+                  {register.errors.registerPassword ? (
+                    <p>{register.errors.registerPassword}</p>
+                  ) : null}
+                </ErrorText>
+                <Validation display={passwordGuide}>
+                  <span style={{ color: "rgba(0, 0, 0, 0.8) " }}>
+                    Your password must...
+                  </span>
+                  {register.values.registerPassword.length > 8 ? (
+                    <span style={{ color: "green" }}>
+                      Have minimum of 8 characters
+                    </span>
+                  ) : (
+                    <span>Have minimum of 8 characters</span>
+                  )}
+                  {isUpper(register.values.registerPassword) ? (
+                    <span style={{ color: "green" }}>
+                      Have 1 uppercase character
+                    </span>
+                  ) : (
+                    <span>Have 1 uppercase character</span>
+                  )}
+                  {hasNumber(register.values.registerPassword) ? (
+                    <span style={{ color: "green" }}>Have 1 number</span>
+                  ) : (
+                    <span>Have 1 number</span>
+                  )}
+                  {containsSpecialChars(register.values.registerPassword) ? (
+                    <span style={{ color: "green" }}>
+                      Have 1 special character
+                    </span>
+                  ) : (
+                    <span>Have 1 special character</span>
+                  )}
+                </Validation>
+              </div>
+              <div>
+                <Label htmlFor="confirmPassword"></Label>
+                <Input
+                  value={register.values.confirmPassword}
+                  name="confirmPassword"
+                  onChange={register.handleChange}
+                  id="ConfirmPassword"
+                  type="password"
+                  placeholder="Confirm Password"
+                />
+                <ErrorText>
+                  {register.errors.confirmPassword ? (
+                    <p>{register.errors.confirmPassword}</p>
+                  ) : null}
+                </ErrorText>
+              </div>
+              <RegisterText>
+                I agree to the Website <u>Terms of Use</u>, and the{" "}
+                <u>Privacy Policy</u>.
+              </RegisterText>
+              <ErrorText>{registerError}</ErrorText>
+              <Button type="submit">Create Account</Button>
+            </RegisterForm>
+          </Container>
+          <ThankyouContainer status={registerComplete}>
+            <ThankyouMessage>
+              Thank You for Registering With Us!
+            </ThankyouMessage>
+          </ThankyouContainer>
+        </React.Fragment>
+      )}
+    </React.Fragment>
   );
 };
 
