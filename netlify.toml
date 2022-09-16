@@ -1,5 +1,4 @@
 [context.production]
-environment {
-    REACT_APP_API_KEY="mongodb+srv://kakarock:rlawlgud@cluster0.unmy7.mongodb.net/shopping?retryWrites=true&w=majority",
-REACT_APP_API_URL="https://salty-cove-67238.herokuapp.com/"
-}
+  publish = "output/"
+  command = "make publish"
+  environment = { REACT_APP_API_KEY = "mongodb+srv://kakarock:rlawlgud@cluster0.unmy7.mongodb.net/shopping?retryWrites=true&w=majority", REACT_APP_API_URL="https://salty-cove-67238.herokuapp.com/" }
