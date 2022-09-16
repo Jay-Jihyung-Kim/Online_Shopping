@@ -257,6 +257,7 @@ const Registration = () => {
   const [registerComplete, setRegisterComplete] = useState(false);
   const currentUser = store.getState().user;
   const baseURL = process.env.REACT_APP_API_URL;
+  console.log(baseURL);
 
   const register = useFormik({
     initialValues: {
