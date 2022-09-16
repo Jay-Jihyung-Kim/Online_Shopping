@@ -177,7 +177,7 @@ const ProductDetailPage = (props) => {
       navigate("/account-login");
     } else {
       try {
-        await axios.put("http://localhost:3001/users", {
+        await axios.put("http://localhost:3001/api/users", {
           email: currentUser.email,
           cart: {
             url: currentItem.url,

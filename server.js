@@ -15,13 +15,13 @@ if (!config.get("jwtPrivateKey")) {
   console.error("FATAL ERROR: jwtPrivateKey is not defined.");
   process.exit(1);
 }
-
-mongoose.connect("mongodb://localhost:27017/shopping");
+mongoose.connect(process.env.REACT_APP_API_KEY);
+// mongoose.connect("mongodb://localhost:27017/shopping");
 const port = process.env.PORT || 3001;
 
-app.use("/users", users);
-app.use("/auth", auth);
-app.use("/cart", cart);
+app.use("/api/users", users);
+app.use("/api/auth", auth);
+app.use("/api/cart", cart);
 
 app.listen(port, function () {
   console.log("server running on port 3001");

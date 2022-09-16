@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { bestsellerlist } from "../data/homeCategoryImage";
 import { mobile } from "../util/responsive";
 
@@ -50,6 +51,7 @@ const CategoryImage = styled.img`
   height: 100%;
   max-height: 282px;
   object-fit: cover;
+  cursor: pointer;
   @media (max-width: 500px) {
     width: 170px;
   }
@@ -66,6 +68,12 @@ const CategoryName = styled.span`
 `;
 
 const BestSeller = () => {
+  const navigate = useNavigate();
+
+  function toProduct() {
+    navigate("/products");
+    window.scrollTo(0, 0);
+  }
   return (
     <Background>
       <MidText>Shop by Category</MidText>
@@ -73,7 +81,7 @@ const BestSeller = () => {
         {bestsellerlist.map((item) => {
           return (
             <CategoryCard key={item.id}>
-              <CategoryImage src={item.image} />
+              <CategoryImage src={item.image} onClick={toProduct} />
               <CategoryName>{item.category}</CategoryName>
             </CategoryCard>
           );

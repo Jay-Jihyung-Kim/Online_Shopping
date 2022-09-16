@@ -236,7 +236,7 @@ const Header = () => {
     if (currentUser !== undefined) {
       const callCurrentCart = async () => {
         const user = await axios.get(
-          `http://localhost:3001/users/` + currentUser.userId
+          `http://localhost:3001/api/users/` + currentUser.userId
         );
         const cart = user.data.cart;
         setCurrentCart(cart);

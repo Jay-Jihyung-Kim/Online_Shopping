@@ -222,7 +222,7 @@ const UserCart = () => {
     setPayment(true);
     window.scrollTo(0, 0);
     setTimeout(async () => {
-      await axios.put(`http://localhost:3001/users/` + currentUser.userId, {
+      await axios.put(`http://localhost:3001/api/users/` + currentUser.userId, {
         cart: [],
       });
       navigate("/");
@@ -241,7 +241,7 @@ const UserCart = () => {
   useEffect(() => {
     const callCurrentCart = async () => {
       const user = await axios.get(
-        `http://localhost:3001/users/` + currentUser.userId
+        `http://localhost:3001/api/users/` + currentUser.userId
       );
       const cart = user.data.cart;
       setCurrentCart(cart);
@@ -281,7 +281,7 @@ const UserCart = () => {
 
   useEffect(() => {
     const UpdateCart = async () => {
-      await axios.put(`http://localhost:3001/users/` + currentUser.userId, {
+      await axios.put(`http://localhost:3001/api/users/` + currentUser.userId, {
         cart: currentCart,
       });
     };
