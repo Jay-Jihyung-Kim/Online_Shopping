@@ -283,7 +283,7 @@ const Registration = () => {
         .oneOf([Yup.ref("registerPassword")], "Your passwords do not match."),
     }),
 
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       try {
         await axios.post(baseURL + "api/users", {
           firstName:
@@ -295,7 +295,6 @@ const Registration = () => {
           email: values.registerEmail.toLowerCase(),
           password: values.registerPassword,
         });
-        resetForm();
         setRegisterComplete(true);
         setTimeout(() => {
           navigate("/");
