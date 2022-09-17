@@ -223,7 +223,7 @@ const ProductDetailPage = () => {
               <ProductCategory>Color: </ProductCategory>
               <ProductPrice>{currentColor}</ProductPrice>
             </FlexContainer>
-            <FlexContainer>
+            <FlexContainer style={{ gap: "9px" }}>
               {colors.map((item) => {
                 return (
                   <ProductColor
