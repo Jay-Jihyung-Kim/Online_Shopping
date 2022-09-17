@@ -297,8 +297,8 @@ const Registration = () => {
         });
         setRegisterComplete(true);
         setTimeout(() => {
-          navigate("/");
           toTop();
+          navigate("/");
           setRegisterComplete(false);
         }, 3000);
       } catch (err) {
@@ -340,6 +340,7 @@ const Registration = () => {
             name: response.data.firstName,
           },
         });
+        toTop();
         navigate("/cart");
       } catch (err) {
         if (err.response?.status === 400) {
