@@ -81,7 +81,7 @@ const LeftMobile = styled.div`
   display: none;
   font-size: 25px;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   flex: 25%;
   ${mobile({ display: "flex" })}
 `;
@@ -91,7 +91,7 @@ const RightMobile = styled.div`
   font-size: 25px;
   flex-direction: row-reverse;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   flex: 25%;
   ${mobile({ display: "flex" })}
 `;

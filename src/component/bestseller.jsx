@@ -34,6 +34,7 @@ const BestCategoryContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     justify-items: center;
+    gap: 12px;
   }
 `;
 const CategoryCard = styled.div`
@@ -54,6 +55,7 @@ const CategoryImage = styled.img`
   cursor: pointer;
   @media (max-width: 500px) {
     width: 170px;
+    height: 226px;
   }
 `;
 const CategoryName = styled.span`

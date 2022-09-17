@@ -245,6 +245,8 @@ const SignOutButton = styled.button`
   border: 1px solid gray;
   text-transform: uppercase;
   margin-top: 50px;
+  color: black;
+  font-size: 15px;
 `;
 
 const Registration = () => {

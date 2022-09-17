@@ -35,6 +35,7 @@ const CarouselPromoButton = styled.button`
   width: 120px;
   padding: 5px;
   background-color: white;
+  color: black;
   ${mobile({ fontSize: "12px", width: "100px" })}
 `;
 const GridContainer = styled.div``;

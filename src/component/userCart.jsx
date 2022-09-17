@@ -75,6 +75,7 @@ const SmallButton = styled.button`
   font-size: 12px;
   height: 45px;
   background-color: white;
+  color: black;
 `;
 
 const StyledLink = styled(Link)`
