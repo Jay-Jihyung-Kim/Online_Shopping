@@ -179,6 +179,7 @@ const ProductDetailPage = () => {
 
   const handleSubmit = async () => {
     if (currentUser === undefined) {
+      window.scrollTo(0, 0);
       navigate("/account-login");
     } else {
       try {
