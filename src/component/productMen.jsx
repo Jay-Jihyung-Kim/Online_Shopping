@@ -17,7 +17,9 @@ import FormLabel from "@mui/material/FormLabel";
 import DisplaySettingsIcon from "@mui/icons-material/DisplaySettings";
 import Select from "@mui/material/Select";
 import { BsXLg } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -249,6 +251,7 @@ const ProductMen = () => {
   const [sortBy, setSortBy] = useState("");
   const [filterstatus, setFilterstatus] = useState([]);
   const [filtered, setFiltered] = useState([]);
+  const navigate = useNavigate();
 
   const handlePages = (page) => {
     setCurrentPage(page);
@@ -326,6 +329,10 @@ const ProductMen = () => {
   const handleMenuOpen = () => {
     menuOpen === false ? setMenuOpen(true) : setMenuOpen(false);
     window.scrollTo(0, 0);
+  };
+
+  const handleLink = (id) => {
+    navigate("/products/" + id);
   };
 
   const typeFilteredList =
@@ -567,13 +574,13 @@ const ProductMen = () => {
           <ProductContainer>
             <ProductItems>
               {currentlist.map((item) => (
-                <a href={`/products/${item.id}`}>
+                <Link to={"/products/" + item.id}>
                   <ProductItem key={item.id}>
                     <ProductImg src={item.url} />
                     <ProductText>{item.name}</ProductText>
                     <ProductText>${item.price}</ProductText>
                   </ProductItem>
-                </a>
+                </Link>
               ))}
             </ProductItems>
             <PaginationContainer>

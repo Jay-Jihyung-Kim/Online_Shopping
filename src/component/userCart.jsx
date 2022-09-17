@@ -15,6 +15,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import store from "../redux/store";
 import axios from "axios";
+import ScrollLock from "../util/scrolllock";
 
 //Empty
 const EmptyContainer = styled.div`
@@ -186,6 +187,7 @@ const ThankyouContainer = styled.div`
   display: ${(props) => (props.status === true ? "flex" : "none")};
   justify-content: center;
   align-items: center;
+  touch-action: none;
 `;
 const ThankyouMessage = styled.span`
   color: white;
@@ -203,6 +205,7 @@ const UserCart = () => {
   const [payment, setPayment] = useState(false);
   const currentUser = store.getState().user;
   const navigate = useNavigate();
+  const baseURL = process.env.REACT_APP_API_URL;
 
   const handleQuantityChange = (e) => {
     setCurrentQuantity(e.target.value);
@@ -222,16 +225,22 @@ const UserCart = () => {
     setPayment(true);
     window.scrollTo(0, 0);
     setTimeout(async () => {
-      await axios.put(`http://localhost:3001/api/users/` + currentUser.userId, {
-        cart: [],
-      });
+      await axios.put(
+        baseURL + "api/users/" + currentUser.userId,
+        {
+          cart: [],
+        },
+        {
+          headers: { "x-auth-token": currentUser.token },
+        }
+      );
+
       navigate("/");
     }, 3000);
   };
 
   const toProduct = (id) => {
     navigate("/products/" + id);
-    window.location.reload(true);
   };
 
   function toTop() {
@@ -241,7 +250,10 @@ const UserCart = () => {
   useEffect(() => {
     const callCurrentCart = async () => {
       const user = await axios.get(
-        `http://localhost:3001/api/users/` + currentUser.userId
+        baseURL + "api/users/" + currentUser.userId,
+        {
+          headers: { "x-auth-token": currentUser.token },
+        }
       );
       const cart = user.data.cart;
       setCurrentCart(cart);
@@ -281,9 +293,15 @@ const UserCart = () => {
 
   useEffect(() => {
     const UpdateCart = async () => {
-      await axios.put(`http://localhost:3001/api/users/` + currentUser.userId, {
-        cart: currentCart,
-      });
+      await axios.put(
+        baseURL + "api/users/" + currentUser.userId,
+        {
+          cart: currentCart,
+        },
+        {
+          headers: { "x-auth-token": currentUser.token },
+        }
+      );
     };
     UpdateCart();
   }, [currentCart]);

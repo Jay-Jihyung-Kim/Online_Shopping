@@ -15,6 +15,7 @@ import store from "../redux/store";
 import axios from "axios";
 import Badge from "@mui/material/Badge";
 import MobileFooter from "./mobilefooter";
+import { useBeforeunload } from "react-beforeunload";
 
 const Container = styled.div`
   position: sticky;
@@ -198,6 +199,15 @@ const Header = () => {
   const [openMobileMenu, setOpenMobileMenu] = useState("closed");
   const [currentCart, setCurrentCart] = useState();
   const currentUser = store.getState().user;
+  const baseURL = process.env.REACT_APP_API_URL;
+
+  useBeforeunload((event) => {
+    store.dispatch({
+      type: "REMOVE_SELECTED_USERS",
+    });
+    event.preventDefault();
+    return "Are you sure you want to exit?";
+  });
 
   const handleCategory = (category) => {
     if (category === "Women") {
@@ -236,14 +246,17 @@ const Header = () => {
     if (currentUser !== undefined) {
       const callCurrentCart = async () => {
         const user = await axios.get(
-          `http://localhost:3001/api/users/` + currentUser.userId
+          baseURL + "api/users/" + currentUser.userId,
+          {
+            headers: { "x-auth-token": currentUser.token },
+          }
         );
         const cart = user.data.cart;
         setCurrentCart(cart);
       };
       callCurrentCart();
     }
-  }, [currentCart]);
+  }, []);
 
   return (
     <Container>

@@ -12,6 +12,7 @@ import PromoItems from "./promoitems";
 import Subscribe from "./subscribe";
 import store from "../redux/store";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   font-family: "Libre Baskerville", serif;
@@ -141,14 +142,17 @@ const sizes = [
   { size: "XXL", id: 6 },
 ];
 
-const ProductDetailPage = (props) => {
+const ProductDetailPage = () => {
   const [currentColor, setCurrentColor] = useState("Pink-Red");
   const [currentSize, setCurrentSize] = useState("M");
   const [currentQuantity, setCurrentQuantity] = useState(1);
   const navigate = useNavigate();
   const currentUser = store.getState().user;
+  const baseURL = process.env.REACT_APP_API_URL;
+  const currentURL = window.location.pathname;
 
-  const { item } = props;
+  const id = currentURL.substring(currentURL.lastIndexOf("/") + 1);
+  const item = productImage.filter((item) => item.id === parseInt(id));
   const currentItem = item[0];
   const excludedList = productImage.filter(
     (item) => item.id !== currentItem.id
@@ -156,6 +160,7 @@ const ProductDetailPage = (props) => {
   const filteredItem = excludedList.filter(
     (item) => item.type === currentItem.type
   );
+  console.log(currentItem);
   const salePrice = Math.round(currentItem.price * 0.8 * 100) / 100;
   const salePriceDecimal =
     salePrice.toString().length > 3 ? salePrice + "0" : salePrice;
@@ -177,7 +182,7 @@ const ProductDetailPage = (props) => {
       navigate("/account-login");
     } else {
       try {
-        await axios.put("http://localhost:3001/api/users", {
+        await axios.put(baseURL + "api/users/", {
           email: currentUser.email,
           cart: {
             url: currentItem.url,
@@ -196,6 +201,10 @@ const ProductDetailPage = (props) => {
       }
     }
   };
+
+  function toTop() {
+    window.scrollTo(0, 0);
+  }
 
   return (
     <Container>
@@ -281,24 +290,24 @@ const ProductDetailPage = (props) => {
           {filteredItem.length > 4
             ? filteredItem.slice(0, 4).map((item) => {
                 return (
-                  <a key={item.id} href={`/products/${item.id}`}>
-                    <RecommendationImageContainer>
+                  <Link to={"/products/" + item.id}>
+                    <RecommendationImageContainer onClick={toTop}>
                       <RecommendationImage src={item.url} />
                       <RecommendationText>{item.name}</RecommendationText>
                       <RecommendationText>${item.price}</RecommendationText>
                     </RecommendationImageContainer>
-                  </a>
+                  </Link>
                 );
               })
             : filteredItem.map((item) => {
                 return (
-                  <a key={item.id} href={`/products/${item.id}`}>
-                    <RecommendationImageContainer>
+                  <Link to={"/products/" + item.id}>
+                    <RecommendationImageContainer onClick={toTop}>
                       <RecommendationImage src={item.url} />
                       <RecommendationText>{item.name}</RecommendationText>
                       <RecommendationText>${item.price}</RecommendationText>
                     </RecommendationImageContainer>
-                  </a>
+                  </Link>
                 );
               })}
         </RecommendationFlexContainer>
