@@ -303,6 +303,9 @@ const Registration = () => {
           setRegisterComplete(false);
         }, 3000);
       } catch (err) {
+        if (err.response?.status === 400) {
+          setRegisterError(err.response.data);
+        }
         if (err.response?.status === 409) {
           setRegisterError("This Email is already registered");
         }
