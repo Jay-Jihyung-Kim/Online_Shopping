@@ -160,7 +160,7 @@ const ProductDetailPage = () => {
   const filteredItem = excludedList.filter(
     (item) => item.type === currentItem.type
   );
-  console.log(currentItem);
+
   const salePrice = Math.round(currentItem.price * 0.8 * 100) / 100;
   const salePriceDecimal =
     salePrice.toString().length > 3 ? salePrice + "0" : salePrice;
