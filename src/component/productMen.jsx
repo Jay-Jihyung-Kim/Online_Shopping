@@ -331,8 +331,8 @@ const ProductMen = () => {
     window.scrollTo(0, 0);
   };
 
-  const handleLink = (id) => {
-    navigate("/products/" + id);
+  const toTop = () => {
+    window.scrollTo(0, 0);
   };
 
   const typeFilteredList =
@@ -576,7 +576,7 @@ const ProductMen = () => {
               {currentlist.map((item) => (
                 <Link to={"/products/" + item.id}>
                   <ProductItem key={item.id}>
-                    <ProductImg src={item.url} />
+                    <ProductImg src={item.url} onClick={toTop} />
                     <ProductText>{item.name}</ProductText>
                     <ProductText>${item.price}</ProductText>
                   </ProductItem>
